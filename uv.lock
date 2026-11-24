@@ -759,7 +759,7 @@ pcm = [
 
 [[package]]
 name = "openzilo-gesture"
-version = "0.2.0"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "hmmlearn" },
@@ -780,7 +780,7 @@ requires-dist = [
 
 [[package]]
 name = "openzilo-gesture-studio"
-version = "0.2.0"
+version = "0.2.1"
 source = { editable = "studio" }
 dependencies = [
     { name = "openzilo", extra = ["pcm"] },
