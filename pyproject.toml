@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openzilo-gesture"
-version = "0.2.0"
+version = "0.2.1"
 description = "Portable six-axis IMU gesture recognition with exported HMM models"
 readme = "README.md"
 requires-python = ">=3.10"

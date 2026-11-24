@@ -4,5 +4,5 @@ from .bundle import GestureBundle
 from .config import AXES, PipelineConfig, SegmentationConfig, RejectionCalibration
 from .recognizer import GestureRecognizer, Prediction
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 __all__ = ["AXES", "GestureBundle", "GestureRecognizer", "PipelineConfig", "Prediction", "SegmentationConfig", "RejectionCalibration"]

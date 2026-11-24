@@ -15,6 +15,7 @@ from openzilo_gesture import GestureBundle, PipelineConfig, RejectionCalibration
 from openzilo_gesture.config import integer
 from openzilo_gesture.preprocessing import FeatureExtractor, SignalFilter, make_pipeline, validate_samples
 from openzilo_gesture.segmentation import impulse_peak, prepare_recording
+from . import __version__
 from .datasets import GestureDataset, load_dataset
 
 
@@ -266,7 +267,7 @@ def train_datasets(datasets: list[GestureDataset], pipeline: PipelineConfig,
         notify(f"完成 {dataset.name}: {count}/{len(dataset.repetitions)} 次有效录制，"
                f"{model.n_components} 状态，训练分数 {score:.4f}")
     return GestureBundle(models, pipeline, segmentation, {
-        "created_at": datetime.now().astimezone().isoformat(), "trainer": "openzilo-gesture-studio/0.2.0",
+        "created_at": datetime.now().astimezone().isoformat(), "trainer": f"openzilo-gesture-studio/{__version__}",
         "training": summaries,
     }, rejection=rejection)
 

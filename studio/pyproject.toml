@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openzilo-gesture-studio"
-version = "0.2.0"
+version = "0.2.1"
 description = "Desktop ring gesture recording, training and export platform"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MPL-2.0"
 license-files = ["LICENSE"]
 dependencies = [
-  "openzilo-gesture==0.2.0",
+  "openzilo-gesture==0.2.1",
   "sounddevice>=0.5,<0.6",
   "PySide6-Essentials>=6.9,<6.12",  # 6.12 aborts at exit on Python 3.10
   "pyqtgraph>=0.13.7,<0.15",
