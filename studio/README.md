@@ -187,4 +187,4 @@ for result in recognizer.feed(batch, sample_rate_hz=25):
     print(result.name, result.confidence)
 ```
 
-项目采用 MPL-2.0。Studio 从 PyPI 安装 `openzilo[pcm]==0.6.3`。训练与推理均在电脑端运行。
+项目采用 MPL-2.0。Studio 从 PyPI 安装 `openzilo[pcm]>=0.6.3,<0.7`。训练与推理均在电脑端运行。
