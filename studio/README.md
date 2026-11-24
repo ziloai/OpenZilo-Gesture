@@ -1,190 +1,208 @@
-# HMM Gesture Studio / 手势训练平台
+# OpenZilo Gesture Studio
 
-独立于推理包的桌面应用：扫描/连接 OpenZilo 戒指，显示实时六轴曲线、录制手势、导入 JSON/CSV、训练、导出和试识别，也可接收/下载戒指录音。使用 uv 管理环境与依赖，需要 Python 3.10+、Git 和蓝牙权限；新版固件通过订阅启动 IMU，无需切换模式；新增功能按连接时查询到的设备能力开放。
+[中文](https://github.com/ziloai/OpenZilo-Gesture/blob/main/studio/README.zh-CN.md)
 
-默认启动基于 PySide6 的新界面。旧的 Tkinter 界面仍然保留，可用 `--ui legacy` 启动。
+Studio is a desktop app separate from the Python recognition package. It scans for and connects to OpenZilo rings, plots live six-axis motion data, records gestures, imports JSON and CSV recordings, trains and exports models, tests recognition, and receives or downloads ring audio. Recent firmware starts IMU streaming when Studio subscribes, without requiring a mode switch. Studio enables features according to the capabilities the ring reports on connection.
 
-新界面支持中文和英语：首次启动跟随系统界面语言，中文系统使用中文，其他语言使用英语。可在侧边栏“设置 → 语言”选择“跟随系统 / English / 中文”，即时生效并记住选择，不影响设备连接、录制或未保存的输入。旧界面仍为中文。
+## Run Studio
 
-从仓库根目录安装和启动：
+Requires Python 3.10 or later, a graphical desktop, and Bluetooth permission to connect a ring.
+
+```bash
+python -m pip install openzilo-gesture-studio
+openzilo-gesture-studio
+```
+
+To run from source, clone the [GitHub repository](https://github.com/ziloai/OpenZilo-Gesture) with Git and run these commands from its root:
 
 ```bash
 uv sync --locked --all-packages
 uv run --locked --all-packages openzilo-gesture-studio
-# 或 uv run --locked --package openzilo-gesture-studio python -m openzilo_gesture_studio
+# Alternatively:
+uv run --locked --package openzilo-gesture-studio python -m openzilo_gesture_studio
 
-# 启动旧界面（需要带 Tkinter 的 Python）
+# Launch the legacy interface:
 uv run --locked --all-packages openzilo-gesture-studio --ui legacy
-# 或 uv run --locked --all-packages openzilo-gesture-studio-legacy
+# Alternatively:
+uv run --locked --all-packages openzilo-gesture-studio-legacy
 ```
 
-工作区共用根目录的 `uv.lock` 和 `.venv/`，默认开发解释器为 Python 3.12，无需手动激活环境。在 `studio/` 目录内也可直接运行 `uv run --locked openzilo-gesture-studio`，但默认数据目录相对于当前工作目录。
+The workspace shares the root `uv.lock` and `.venv/`. Development defaults to Python 3.12; there is no need to activate the environment manually. You can also run `uv run --locked openzilo-gesture-studio` from `studio/`, but default data directories are relative to the current working directory.
 
-新界面的 PySide6 和 pyqtgraph 由 uv 安装。Linux 若提示缺少系统库，请执行 `sudo apt install libegl1 libgl1 libxkbcommon0 libdbus-1-3`。
+The default PySide6 interface uses PySide6 and pyqtgraph, which uv installs. If Qt reports missing system libraries on Debian or Ubuntu, run `sudo apt install libegl1 libgl1 libxkbcommon0 libdbus-1-3`.
 
-只有旧界面需要 Tkinter：Linux 可能需要 `sudo apt install python3-tk`；macOS 请使用带 Tk 的 Python，Homebrew Python 需安装匹配版本的 `python-tk`。Tkinter 由 Python/系统提供，不能用 `uv add` 安装；可用 `uv sync --locked --all-packages --python /path/to/python3.12` 选择解释器。
+Only the legacy interface needs Tkinter. On Linux you may need `sudo apt install python3-tk`; on macOS use a Python with Tk support, or install the matching `python-tk` for Homebrew Python. Tkinter comes from Python or the operating system, not `uv add`. To select an interpreter, run `uv sync --locked --all-packages --python /path/to/python3.12`.
 
-## 界面对照
+## Interface language
 
-下文沿用旧界面的页面名称。两套界面的功能和数据目录相同，对应关系如下：
+Open **Settings → Language** in the sidebar to choose English, Chinese, or the system default. The change takes effect immediately and persists across restarts, without interrupting the device connection, a recording, or unsaved input. By default, Studio uses Chinese if the system interface language is Chinese and English otherwise.
 
-| 旧界面 | 新界面 |
+The legacy Tkinter interface is available only in Chinese.
+
+## Interface reference
+
+Both interfaces use the same data directories. Use this table to find the corresponding controls in the default interface:
+
+| Legacy interface | Default interface |
 | --- | --- |
-| 设备连接区 | 侧边栏底部的设备卡 → “设备”页 |
-| 手势录制与训练 | “采集”页（录制、数据集）、“训练”页（参数、训练、导出） |
-| 实时六轴曲线 | “实时”页（“采集”页只显示录制后的波形） |
-| 实时试识别开关 | “实时”页 |
-| 录制波形（滤波后） | “采集”页 |
-| 加速度诊断 | “诊断”页 |
-| 戒指录音 | “录音”页 |
-| 校准与固件 | “设备工具”页 |
-| —（新界面新增） | “关于”页：版本号、GitHub 仓库、贡献者（打开该页时才从 GitHub 获取公开信息，不发送设备或手势数据） |
-| 日志 | 窗口底部的日志栏，点击“显示日志”展开为列表，可多选后复制 |
+| Device connection area | Device card at the bottom of the sidebar, then the **Device** page |
+| Gesture recording and training | **Capture** for recording and datasets; **Train** for settings, training, and export |
+| Live six-axis chart | **Live**; **Capture** shows only recorded waveforms |
+| Live recognition toggle | **Live** |
+| Filtered recording waveform | **Capture** |
+| Acceleration diagnostics | **Diagnostics** |
+| Ring audio | **Audio** |
+| Calibration and firmware | **Device tools** |
+| Not available | **About** shows versions, the GitHub repository, and contributors. Studio fetches public information from GitHub only when you open this page, and sends no device or gesture data. |
+| Log | Click **Show log** at the bottom of the window to expand the list. You can select and copy multiple rows. |
 
-## 使用流程
+## Record, train, and export
 
-1. 选择工作目录（默认 `gestures/`），扫描选择戒指或直接输入地址，点击连接。成功连接的设备会保存在本机历史中，下次从下拉框直接选择，无需重新扫描；最多保留最近 20 台，可用“清空设备历史”删除。macOS 地址通常是 UUID。BLE 连接状态与 IMU 上报状态分别显示；只有实际收到新的 IMU 数据才允许采集手势。
-2. 输入手势名称，点击开始录制，做一次动作后停止；拒识标定训练每类至少三次，建议五到十次以上。停止后自动显示“录制波形（滤波后）”：实线为与训练一致的中值＋低通滤波结果，浅色虚线为原始数据；可切换各次重复、关闭原始叠加。也可在数据集中选中已保存手势，再进入波形页查看。默认每次至少 12 个采样点，过短录制只预览、不保留。保存时可以确认追加到同名、同采样率数据，未完成的录制在断连时丢弃。
-3. 也可导入已有 JSON 或多个无表头 CSV（每个文件一次重复，六列 `ax,ay,az,gx,gy,gz` 原始 int16 值）。CSV 采样率取界面中的采样率设置。旧 JSON 未标注采样率时按 25 Hz 处理。
-4. 设置训练采样率，使其匹配数据实际采样率；低通截止频率必须小于采样率一半，中值点数设为 `1` 可关闭中值滤波。响指、敲击等短促动作请先点击“应用短促动作 / 响指预设”，挥手等选择连续动作预设。点击“训练全部数据”，后台训练及拒识标定不阻塞界面。不同采样率不能混训。
-5. 导出 `*.gesture.json`，包含手势名称、HMM 参数、预处理和分段参数。数据或训练配置修改后需重新训练才能导出。
-6. 可加载已导出的模型包，连接同采样率戒指，开启实时试识别。先静止，每次手势后恢复静止。单类没有相对置信度，不再显示固定 `0.80`；无拒识标定的单类旧模型不能开启自动识别，需重新训练。拒识检查也不是概率保证，仍须用普通运动、抖动等负样本验证误触。
+1. Choose a working directory (default: `gestures/`). Scan for a ring or enter its address directly, then click **Connect**. Studio remembers the last 20 successfully connected devices so you can select them without scanning again. **Clear device history** removes these entries. On macOS, the address is typically a UUID. Studio shows the BLE connection and IMU stream status separately, and allows recording only after fresh IMU samples arrive.
+2. Name the gesture, click **Record take**, perform the gesture once, and stop. Rejection calibration requires at least three takes per gesture; aim for five to ten or more. After each take, the waveform shows the same median and low-pass filtering used for training as a solid line, and the raw data as a faint dashed line. You can switch between takes, hide the raw overlay, or select a saved gesture in the dataset to inspect it. By default, takes shorter than 12 samples can be previewed but are not kept. When saving, you can confirm appending to an existing gesture if the name and sample rate match. Disconnecting discards any take still in progress.
+3. You can import existing JSON recordings or multiple headerless CSVs. Each CSV contains one take with six columns of raw int16 values: `ax,ay,az,gx,gy,gz`. Studio uses the sample rate selected in the interface for CSV imports. For older JSON files without a sample rate, it assumes 25 Hz.
+4. Set the training sample rate to match your data. The low-pass cutoff must be below half the sample rate, and setting the median window to `1` turns median filtering off. Use the impulse/snap preset for snaps and knocks, or the continuous motion preset for movements such as waves. Click **Train all data**. Training and rejection calibration run in the background without blocking the interface. Do not mix recordings with different sample rates in one training run.
+5. Export a `*.gesture.json` bundle containing gesture names, HMM parameters, and preprocessing and segmentation settings. If you change the data or training settings, retrain before exporting.
+6. To test a saved model, load its bundle, connect a ring streaming at the model's sample rate, and turn on **Live recognition**. Start at rest and return to rest after each gesture. Single-gesture models have no relative confidence; Studio does not display a fixed `0.80`. Older single-gesture models without rejection calibration must be retrained before live recognition can be enabled. Rejection checks are not a probability guarantee. Test for false triggers with negative examples such as ordinary movements and shaking.
 
-### 删除已保存手势
+### Delete saved gestures
 
-在数据集列表中选中一项或多项，点击“删除选中手势”。确认框会列出名称、文件路径和录制次数；确认后**永久删除所选 JSON 文件及其中全部录制、训练框标注，无法撤销**。取消不会改变文件或模型状态。
+Select one or more items in the dataset and click **Delete selected gestures**. The confirmation lists the names, paths, and take counts. Confirming **permanently deletes the selected JSON files and all takes and training-window annotations they contain. This cannot be undone.** Canceling leaves files and model state unchanged.
 
-- 只操作所选行的实际文件；其他手势、未保存录制、正在采集的数据和已导出的模型文件均保留。
-- 删除后刷新列表与已保存波形预览，当前训练模型和已有评估结果失效，需重新训练；独立加载的模型包不受影响。训练、评估和退出期间禁止删除。
-- 批量删除逐项执行，失败不阻止其他所选项；提示分别列出成功、已不存在和失败的文件。不自动重试或回滚，处理失败原因后可重新选择并删除。全部失败且数据未改变时，不刷新或使模型失效。
+- Only the files for the selected rows are affected. Other gestures, unsaved takes, data being captured, and exported models are kept.
+- After deletion, Studio refreshes the dataset and saved waveform preview. The current trained model and evaluation results become invalid, so retrain. Separately loaded model bundles are unaffected. Deletion is disabled during training, evaluation, and shutdown.
+- Bulk deletion processes each file separately. Failures do not stop the remaining deletions. Studio reports which files were removed, already missing, or could not be deleted. It does not retry or roll back automatically. Resolve any errors before selecting the affected files and retrying. If every deletion fails and the data is unchanged, Studio does not refresh or invalidate the model.
 
-## 戒指电量
+## Ring battery
 
-设备连接区域右侧显示电量百分比及“充电中”状态，连接时读取，之后每 60 秒后台刷新。未充电且电量不高于 20% 时显示红色“低电量”提示。未连接显示“—”，读取失败或设备返回无效百分比时显示“未知”，不会把缺失值当作 0%。
+The device connection area shows the battery percentage and charging status. Studio reads it on connection and refreshes it in the background every 60 seconds. A red **Low battery** warning appears at 20% or less when the ring is not charging. The display shows a dash when disconnected and **Unknown** if the reading fails or is invalid. Missing data is not reported as 0%.
 
-电量查询不停止 IMU 上报或收数；音频传输期间暂缓查询，自动接收待机时仍可刷新。读取失败会记录警告并在下一周期重试，不单独断开连接；断开/重连时清空旧电量。
+Battery checks do not stop the IMU stream or data collection. Studio defers the check during audio transfers but can still refresh while automatic audio reception is waiting. A failed check logs a warning and retries at the next interval instead of disconnecting. Disconnecting or reconnecting clears the previous reading.
 
-## 实时曲线与上报恢复
+## Live charts and stream recovery
 
-- “实时六轴曲线”页显示加速度 `ax/ay/az` 和陀螺仪 `gx/gy/gz` 两组曲线，自动缩放，默认显示最近 10 秒。横轴按采样率估算，不是设备时间戳；所有值均为原始 int16。
-- 开启实时试识别后，每个成功识别的片段会在两组六轴图上用紫色虚线框标注，并显示手势名称和置信度。框按实际采样位置对齐（包括分段预留帧，不包括结束静止帧），不是按识别结果到达时间估算。
-- “暂停显示”冻结图形和已有识别框，不停止收数或录制；“恢复显示”回到最新数据。框随曲线滚动、离开窗口后移除。“清空”清除图形及识别框，不删除训练数据，也不影响后续框的位置。
-- IMU 无数据或 `DEVICE_BUSY` 不被当成 BLE 断连。界面显示等待状态，取消未完成的手势，保留已完成的重复。
-- 自动重试订阅，收到新数据后刷新数值与曲线。也可点击“重试 IMU 上报”；只有开始上报的 ACK 并不算恢复成功。
-- 如果 BLE 本身断开，Studio 会退避重连；点击“断开 / 取消连接”或退出可终止重连。协议错误等异常仍会明确报告。
-- **录音和音频传输不暂停 IMU**。实时/远程录音、历史下载、自动接收及保存都与原始 IMU 独立接收，不停报、不重新订阅，六轴曲线与加速度显示持续更新；取消音频或音频保存失败也不停止 IMU。校准、诊断和固件升级仍独占设备资源。手势录制与音频操作的按钮互斥不变；开始音频工具操作会停止实时试识别，回到手势页后按需要重新开启，并静止重建基线。
+- The live page shows separate autoscaling accelerometer (`ax/ay/az`) and gyroscope (`gx/gy/gz`) charts, with the most recent 10 seconds by default. The horizontal axis is estimated from the sample rate, not device timestamps. Values are raw int16 counts.
+- With live recognition on, both charts mark each recognized segment with a purple dashed box and show its gesture name and confidence when available. The boxes align with the sample positions, including segmentation padding but excluding the final rest frames. They do not use the time when the recognition result arrived.
+- Pausing the display freezes charts and existing boxes, not sample collection or recording. Resuming returns to the latest data. Boxes scroll with the charts and disappear when they leave the window. Clearing the charts removes their contents and boxes without deleting training data or changing the alignment of later results.
+- Missing IMU samples or `DEVICE_BUSY` do not mean BLE disconnected. Studio shows that it is waiting, discards any unfinished take, and keeps completed takes.
+- Studio automatically retries the subscription and updates the display after fresh data arrives. You can also retry the IMU stream manually. An acknowledgment alone does not count as recovery.
+- If BLE disconnects, Studio backs off between reconnection attempts. Disconnecting or canceling the connection from the interface, or quitting, stops the retries. Protocol errors are still reported.
+- **Audio recording and transfers do not pause IMU streaming.** Live and remote recording, history downloads, automatic reception, and saving run independently of the raw stream. The six-axis charts and acceleration display keep updating, even when audio is canceled or saving fails. Calibration, diagnostics, and firmware updates still require exclusive device access. Gesture recording and audio controls remain mutually exclusive. Starting an audio operation stops live recognition; re-enable it when you return to gestures and hold still to rebuild the baseline.
 
-## 加速度方向与合加速度诊断
+## Acceleration magnitude and direction diagnostics
 
-连接戒指并收到新 IMU 数据后，打开 **“加速度诊断”** 页，无需录制或加载模型：
+Connect the ring, wait for fresh IMU samples, and open **Diagnostics**. You do not need a recording or a model.
 
-- 显示最新样本的三轴合成值 `|a| = sqrt(ax² + ay² + az²)`，单位为 raw、g 和 m/s²；同时显示换算后的 X/Y/Z 分量。
-- 使用设备实际报告的加速度量程：`a_g = raw × accel_range_g / 32768`，`a_m/s² = a_g × 9.80665`。量程未知/无效时只显示 raw 和方向，不猜测 ±8g 或 ±16g。
-- 方向为单位向量 `a / |a|`，附与传感器 +X/+Y/+Z 的夹角及 XY/XZ/YZ 平面投影。沿负轴时分量为负、夹角趋近 180°；零向量的方向未定义，接近零时方向容易受噪声影响。轴名沿用固件上报结果，不再次映射芯片轴。
-- 合加速度曲线保留每个收到的样本（不是只画每批最后一帧），显示最近 10 秒及窗口最小/最大值；最多保留 5000 点。横轴按采样率估算，不是设备时间戳。“暂停显示”一起冻结数值、方向和曲线，但后台继续收数；“清空”不影响录制/识别。停报、断连、采样率或量程变化会清空诊断，避免把旧值当作当前值。
+- The page shows the latest three-axis magnitude, `|a| = sqrt(ax² + ay² + az²)`, in raw counts, g, and m/s², along with converted X/Y/Z components.
+- The conversion uses the range reported by the device: `a_g = raw × accel_range_g / 32768` and `a_m/s² = a_g × 9.80665`. If the range is unknown or invalid, Studio shows only raw values and direction instead of guessing ±8g or ±16g.
+- Direction is the unit vector `a / |a|`. Studio also shows angles to the sensor's +X/+Y/+Z axes and projections onto the XY, XZ, and YZ planes. A negative-axis component is negative and its angle approaches 180°. Direction is undefined for the zero vector and sensitive to noise near zero. Axis labels follow the firmware; Studio does not remap chip axes.
+- The magnitude chart keeps every sample received, not just the last one in each batch. It shows the last 10 seconds and the minimum and maximum within that window, with a limit of 5,000 samples. The horizontal axis is estimated from the sample rate, not device timestamps. Pausing freezes the values, direction, and chart without stopping collection. Clearing them does not affect recording or recognition. Studio clears stale readings when streaming stops, the ring disconnects, or the sample rate or range changes.
 
-**这是含重力的加速度计读数（比力），不是去重力后的线加速度，也不是移动/速度方向或世界航向。** 静止时通常约 1g；换个姿态静止，方向会变而模长仍约 1g。夹角不是姿态欧拉角；页面的 `|a| − 1g` 也不是三维去重力运算。真正去重力需要在同一坐标系中逐轴相减 `a_linear = a − g_body`。
+**These are accelerometer readings that include gravity (specific force), not gravity-compensated linear acceleration, a direction of motion or velocity, or a world-space heading.** At rest the magnitude is usually about 1g. Changing the ring's orientation and setting it down again changes the direction but leaves the magnitude close to 1g. The axis angles are not Euler angles, and `|a| − 1g` is not three-dimensional gravity compensation. Compensation requires subtracting the gravity vector in the same coordinate system, axis by axis: `a_linear = a − g_body`.
 
-### 幅值参考范围
+### Magnitude reference bands
 
-页面提供两组相对 1g 的**幅值参考范围**，方便观察静置和运动时的变化。这些是显示用的参考线，不是从固件读取的实际算法阈值：
+Two visualization bands around 1g help compare readings at rest and in motion. They are display guides, not firmware algorithm thresholds.
 
-| 相对 1g 的偏差 | 范围（含边界） | 曲线 |
+| Deviation from 1g | Inclusive range | Chart line |
 | --- | --- | --- |
-| ±3% | 0.97–1.03 g | 绿色虚线 |
-| ±10% | 0.90–1.10 g | 橙色虚线 |
+| ±3% | 0.97–1.03 g | Green dashed line |
+| ±10% | 0.90–1.10 g | Orange dashed line |
 
-可先静置戒指观察是否接近 1g，再换几个姿态静置，最后做平移/转动，观察方向和模长是否符合预期、何时超出参考范围。短促峰值可在曲线及窗口最大值中查看。这些数值未经训练滤波，诊断不会改变训练、识别或设备参数。
+First check whether the ring reads close to 1g at rest. Repeat in several orientations, then move or rotate it and see how the magnitude and direction respond. The chart and window maximum show brief peaks. These readings do not go through the training filters, and this view does not change training, recognition, or device parameters.
 
-**“范围内”不等于设备静止、姿态融合有效或校准成功。** 缓慢转动也可能保持约 1g；静止与姿态判断通常还需结合陀螺仪、波动和持续时间等信息。本页仅展示加速度诊断，不计算或代替设备的姿态、去重力线加速度及校准状态。
+**Being within a band does not prove that the ring is still, that sensor fusion is valid, or that calibration succeeded.** Slow rotation can also keep the reading near 1g. Stationarity and orientation estimates usually need other information, such as gyroscope readings, variation, and duration. This page does not calculate or replace the device's orientation, gravity-compensated acceleration, or calibration status.
 
-## 戒指录音
+## Ring audio
 
-先连接设备、停止手势录制，选择保存目录（默认 `audio/`）。四种音频操作不能并行：
+Connect the ring, stop gesture recording, and choose a save directory (default: `audio/`). These four operations cannot run concurrently:
 
-- **远程录音**：读取当前设置/状态，设置单/双声道、8000–32000 bit/s、左右增益 Q8（256 为 1 倍，范围 0–1024）以及最长时长（20–60000 ms，20 的整数倍）。开始后保存在戒指；“停止并保存”请求提前停止，确认保存完成才下载，不把停止 ACK 当作文件已保存。开始超时先查询状态，不重复发送开始。
-- **实时 PCM 接收并保存**：先订阅再开始录音，使用 `LIVE_AND_FLASH` 同时保留戒指副本。PyAV 在进程内解码，无需系统 ffmpeg；仅完整 END 校验通过后保存 WAV，不做语音识别。可在开始前勾选默认关闭的“边接收边播放（仅实时 PCM）”，通过电脑默认音频输出监听；接收期间不能切换。建议使用耳机，避免啸叫。播放失败或缓冲积压会停止播放并在日志中警告，不影响接收和保存；结束、取消或断连时清理播放。提前停止需等待完整结束；中断/丢包不把部分数据当完整录音，必要时从历史下载设备副本。
-- **自动接收**：开启保存通知监听后，可用物理按键长按录音、松开保存。新版 `0x050A` 通知触发下载，监听待机与实际下载均不暂停 IMU。停止接收只停止电脑接收，不停止由物理按键启动的录音。
-- **历史文件**：先停止其他音频操作，查询历史，按索引下载。重复下载使用新文件名，不覆盖旧文件，也不删除戒指副本。
+- **Remote recording:** read the current settings and status. Choose mono or stereo, 8,000–32,000 bit/s, left and right Q8 gain (256 is unity; range 0–1024), and a maximum duration from 20 to 60,000 ms in multiples of 20 ms. The ring stores the recording. **Stop and save** requests an early stop; Studio downloads only after the ring confirms the save, not merely after a stop acknowledgment. If the start request times out, Studio checks status rather than sending it again.
+- **Live PCM reception and saving:** Studio subscribes before starting and uses `LIVE_AND_FLASH` to retain a copy on the ring. PyAV decodes in-process without system ffmpeg. Studio saves a WAV only after validating the complete END and does not perform speech recognition. Before starting, you can enable optional monitoring through the computer's default audio output. Monitoring is off by default and cannot be toggled mid-stream. Use headphones to avoid feedback. Playback errors or a backing-up buffer stop playback and log a warning without affecting reception or saving. Playback is cleaned up when reception ends, is canceled, or disconnects. An early stop still requires a complete ending; interrupted or incomplete streams are not saved as complete recordings. Download the ring's copy from history if needed.
+- **Automatic reception:** enable save-notification listening, then hold the ring's physical button to record and release it to save. The newer `0x050A` notification triggers a download. Neither listening nor downloading pauses the IMU stream. Stopping reception stops the computer from receiving audio; it does not stop recording initiated by the ring button.
+- **Recording history:** stop other audio operations, list the recordings, and download by index. Repeated downloads use new filenames without overwriting existing files or deleting the copy on the ring.
 
-实时播放由 Studio 的 sounddevice/PortAudio 提供，不需要外部播放器。Linux 可能需要 `sudo apt install libportaudio2`；缺少库或没有可用输出设备时仅停止播放，录音接收仍继续。播放不是完整录音的证明，听感和延迟需在目标声卡与戒指上实测。
+Live monitoring uses sounddevice and PortAudio, not an external player. Linux may require `sudo apt install libportaudio2`. If the library or an output device is unavailable, only playback stops; recording reception continues. Playback does not prove a recording is complete. Test audio quality and latency with the target sound device and ring.
 
-远程和实时录音断线策略为 STOP。文件传输进度不是录音时长；只有有效 WAV 才显示时长。下载文件先保留原始 `.bin` 再转换 WAV；Opus 单/双声道由 SDK 自动识别。文件解码需要系统 ffmpeg（macOS `brew install ffmpeg`，Ubuntu/Debian `sudo apt install ffmpeg`，Windows 加入 PATH）；失败保留原始文件。
+Remote and live recordings use the STOP policy on disconnect. Transfer progress is not recording duration; Studio shows duration only for valid WAV files. For downloads, Studio retains the original `.bin` before converting to WAV. The SDK detects mono or stereo Opus. File decoding requires system ffmpeg: `brew install ffmpeg` on macOS, `sudo apt install ffmpeg` on Ubuntu or Debian, or ffmpeg on `PATH` on Windows. The original file is kept if decoding fails.
 
-设备历史继续保存在用户配置目录的 `hmm-gesture-studio/devices.json`，改名前已保存的戒指可直接读取。macOS 为 `~/Library/Application Support/`，Windows 为 `%APPDATA%`，Linux 为 `$XDG_CONFIG_HOME`（默认 `~/.config`）。仅记录成功连接的地址、名称和最近连接时间，不上传；文件损坏或无法写入不影响连接。
+Device history remains in `hmm-gesture-studio/devices.json` under your user configuration directory, so previously saved rings are still available. The base directory is `~/Library/Application Support/` on macOS, `%APPDATA%` on Windows, or `$XDG_CONFIG_HOME` (default: `~/.config`) on Linux. Only successful connections are recorded, including the address, name, and last connection time. Nothing is uploaded. An unreadable or unwritable history file does not prevent connecting.
 
-请在目标戒指上验证订阅、远程开始/停止、长按/松开保存、实时 END、下载与重连；自动测试不代表真机实测。
+Verify subscription, remote start and stop, hold-and-release recording, live END, downloads, and reconnection on the target ring. Automated tests are not a substitute for hardware testing.
 
-## 本机 IMU 校准与诊断
+## Local IMU calibration and diagnostics
 
-打开“校准与固件”页，停止自动音频监听后操作。校准与诊断独占 IMU，期间不能录制手势或做实时识别。
+Open **Device tools** and stop automatic audio reception before calibrating. Calibration and calibration diagnostics take exclusive access to the IMU; while they run, gesture recording and live recognition are unavailable.
 
-- 加速度六面：戒指固定在充电盒中，不在六面采集中重新吸附。按提示摆放并松手，点“继续”；收齐正负六面后，再用三个不同轴的新数据独立验证。
-- 陀螺仪静止：取出充电盒、远离磁铁并平放。等待三个稳定窗口，采集至少 20 秒，再独立验证。完整校准顺序执行两部分。
-- 全部验证通过才原子保存本机配置。取消、采集/验证失败保留旧配置；不会向戒指写参数。
-- “查看配置”展示绑定设备、型号、精确固件和量程。固件升级或量程不匹配时拒绝使用，明确确认“重置配置”后重新校准，不自动覆盖不匹配配置。
-- “校准诊断”单独显示 g、°/s 与实际应用的校准组件。“停止”退出后恢复原始 IMU 订阅。**校准值不进入手势训练、录制或识别**；已有数据和模型仍使用原始整数计数。没有校准组件时不能把诊断读数当作已校准精度保证。
+- **Six-face accelerometer calibration:** keep the ring attached to the charging case throughout the six measurements. Set it in the indicated position, release it, and click **Continue**. After measuring both directions along each of the three axes, verify with fresh samples on three different axes.
+- **Stationary gyroscope calibration:** remove the ring from the charging case, keep it away from magnets, and lay it flat. Wait for three stable windows, collect at least 20 seconds of samples, and verify independently. Full calibration runs the two parts in sequence.
+- Studio saves the local configuration atomically only after all checks pass. Canceling or failing collection or verification leaves the previous configuration untouched. Studio does not write calibration parameters to the ring.
+- The configuration view shows the bound device, model, exact firmware version, and range. Studio refuses to use a configuration after a firmware or range mismatch. Confirm a configuration reset before recalibrating; Studio does not silently overwrite an incompatible configuration.
+- Calibration diagnostics show g, °/s, and which calibration components are actually applied. Stopping the diagnostic restores the raw IMU subscription. **Calibration values never enter gesture training, recording, or recognition.** Existing data and models still use raw integer counts. Readings without applied calibration are not a guarantee of calibrated accuracy.
 
-## 签名固件 OTA
+## Signed firmware updates (OTA)
 
-1. 停止录音、下载、校准和手势录制，保持设备供电与蓝牙连接。
-2. 选择签名 APP `.ota.zip`，以及从独立可信来源取得的 P-256 PEM 公钥。不能信任固件包自己附带的公钥。
-3. 点击离线验签，核对显示的型号、板型、允许起始版本、目标版本等签名元数据，再确认升级。拒绝测试固件；不支持原始 BIN。
-4. 使用已验签的字节快照进行升级，避免文件在确认后被替换。SDK 再次核对设备兼容性，传输后等待重启、重连与完整版本验证。
-5. 升级期间禁止其他设备操作、断开和普通退出，等待完成或超时。**100% 只表示发送进度，不表示成功安装**。失败不会自动重试；会结束当前 Studio 会话，请手动重新连接并核对设备版本后处理。固件更新后需要重新检查本机校准配置。
+1. Stop recordings, downloads, calibration, and gesture capture. Keep the ring powered and connected over Bluetooth.
+2. Select a signed APP `.ota.zip` and a P-256 PEM public key from an independently trusted source. Do not trust a key bundled with the firmware itself.
+3. Run offline signature verification. Check the signed model, board type, allowed starting version, target version, and other metadata before confirming. Test firmware is rejected and raw BIN files are not supported.
+4. Studio uses the verified byte snapshot, so replacing the file after confirmation cannot change what's sent. The SDK checks compatibility again, then waits for reboot, reconnection, and full version verification after transfer.
+5. While the update runs, other device operations, disconnecting, and normal app exit are blocked until completion or timeout. **100% means the transfer finished, not that the update installed successfully.** Studio does not automatically retry on failure; it ends the current device session. Reconnect manually and check the version before proceeding. Recheck local calibration after a firmware update.
 
-开发测试不会自动操作真实设备或刷机；OTA 成功、校准精度与录音效果仍需按目标硬件验收。录音并发验收时，先确认 IMU 持续更新，再分别开始远程和实时 PCM 录音，检查录音、停止和保存全过程的六轴曲线及样本计数持续前进，且没有因音频操作出现暂停或重新订阅；实时播放开启时也应复测。真实 BLE 并发吞吐与丢包情况不能由模拟测试保证。
+Development tests do not operate or flash real hardware. Verify OTA success, calibration accuracy, and audio behavior on the target ring. To test audio and IMU concurrency, confirm that the IMU stream is updating, then separately start a remote recording and a live PCM recording. Make sure the charts and sample counts keep advancing while recording, stopping, and saving, without an IMU pause or resubscription. Repeat with live monitoring enabled. Simulated tests do not establish real BLE throughput or packet loss.
 
-## 响指等短促动作
+## Snaps and other short impulses
 
-100 Hz 下，5 点中值滤波可能把一两帧的真实冲击当成异常值删除；10 Hz 低通又会进一步削弱它。更平滑不等于更适合识别。
+At 100 Hz, a five-point median filter can remove a real impulse lasting one or two samples as if it were an outlier. A 10 Hz low-pass filter can weaken it further. A smoother waveform is not necessarily better for recognition.
 
-1. 点击“应用短促动作 / 响指预设”。采样率取当前设备或录制数据；100 Hz 时为 **中值关闭、2 阶 30 Hz 低通、8 帧特征窗口 / 4 帧重叠**。滤波器从首帧稳态初始化，不制造从零开始的假动作。
-2. 触发量是**原始相邻加速度差的范数**，默认阈值 8000（原始传感器单位，不是 g）。触发后取前 0.12 秒、后 0.28 秒；100 Hz 时共 41 帧。冷却为从触发起 0.6 秒，避免一次冲击反复触发。
-3. **默认训练、离线识别、实时识别用同一个窗口规则**。手动录制可以保留前后等待，训练只取紫框内的数据。没有完整冲击、有多个冲击或前后文不足时会明确拒绝训练，不静默挑选一段；也可按下节手动指定训练框。原始录制不会被截断。
-4. 在录制预览看紫框是否覆盖完整的关键动作；框内实线就是段内预处理后的模型输入。调整触发阈值、低通、中值窗口或手动框后需重新训练。
+1. Apply the impulse/snap preset. Studio takes the sample rate from the current device or recording. At 100 Hz it uses **no median filter, a second-order 30 Hz low-pass filter, and an eight-frame feature window with four-frame overlap**. The filter starts at the steady state for the first sample, so it does not create an artificial transition from zero.
+2. The trigger uses the **norm of the difference between adjacent raw acceleration samples**, with a default threshold of 8,000 raw counts, not g. It keeps 0.12 seconds before and 0.28 seconds after the trigger (41 frames at 100 Hz). A 0.6-second cooldown from the trigger prevents one impulse from firing repeatedly.
+3. **Training, offline recognition, and live recognition use the same window rule by default.** Manual recordings can keep the idle periods on either side, but training uses only the samples inside the purple box. Studio rejects a take rather than silently choosing a segment if the impulse is incomplete, there are multiple impulses, or the surrounding data is insufficient. You can also mark the training window manually. Studio never truncates the original recording.
+4. Check the preview to see whether the purple box covers the full motion. The solid line within it shows the preprocessed segment used by the model. Retrain after changing the trigger threshold, low-pass cutoff, median window, or manual selection.
 
-### 手动训练裁剪框
+### Manual training window
 
-在“录制波形（滤波后）”页选择某次录制，打开“手动框选”，在加速度或陀螺仪图上横向拖拽，框住完整动作及少量前后静止。两张图显示同一个框；重新拖拽可替换，点击“恢复自动裁剪”可移除手动覆盖。每次重复独立保留一个框，至少包含当前特征参数要求的采样点数（默认 12 点）。连续动作模式也可手动框选。
+In the filtered waveform view, select a take, enable **Manual selection**, and drag horizontally across the accelerometer or gyroscope chart to include the whole gesture and a little rest before and after it. Both charts show the same box. Drag again to replace it, or restore automatic cropping to remove the override. Each take stores its own box, which must contain at least the number of samples required by the current feature settings (12 by default). Manual selection also works in continuous motion mode.
 
-- 未保存录制的框随“保存 / 追加”写入；选中已保存手势时，修改框立即保存到原文件。切换重复、刷新或重启后仍可查看。
-- 只保存样本索引标注，完整原始六轴数据不变；训练及拒识标定只使用手动框内数据，不再要求该次录制通过自动冲击检测。
-- **手动框不改变实时触发阈值或窗口长度**。短促预设只看相邻加速度差，陀螺仪变化很大也未必触发。若没有自动框，仍需调整触发阈值或选用连续动作模式，并重新训练、实测；手动框的长度和位置应尽量与实时窗口一致。
-- 留出评估的各折训练使用手动框，但测试仍对完整录制调用原识别流程（短促模式自动分段），漏触发计为未识别，不把手动选中动作当成自动检测成功。
+- For unsaved takes, the window is written when you click **Save / append**. For a saved gesture, editing its window writes to the original file immediately. The annotation remains available after changing takes, refreshing, or restarting.
+- Only sample indices are saved as annotations; the complete raw six-axis data is untouched. Training and rejection calibration use the samples inside the manual window, so the take no longer has to pass automatic impulse detection for training.
+- **Manual selections do not change the live trigger threshold or window length.** The impulse preset uses only differences between adjacent acceleration samples. Even a large gyroscope change may not trigger it. If no automatic window appears, adjust the trigger threshold or use continuous motion mode, then retrain and test. Match the length and position of the manual window to the live window as closely as possible.
+- In holdout evaluation, each training fold uses the manual windows, but testing runs the ordinary recognizer on the full recording, with automatic segmentation in impulse mode. Missed triggers count as failures to recognize; a manual selection is not evidence that automatic detection succeeded.
 
-连续动作模式仍保留基线分段，但 Studio 把持续时间换算为采样帧数；例如 100 Hz 下最长 5 秒是 500 帧，不再沿用 25 Hz 的 125 帧上限。不同类型动作不要未经评估就混用同一个分段预设。
+Continuous motion mode still segments against a baseline, but Studio converts durations to frame counts at the actual sample rate. For example, the five-second maximum is 500 frames at 100 Hz, not the 125 frames used at 25 Hz. Evaluate before sharing one segmentation preset across different kinds of gestures.
 
-## 识别优化、拒识与效果评估
+## Recognition, rejection, and evaluation
 
-训练在标准化后的 24 维特征上拟合 HMM，并限制过小的状态方差；导出前将参数还原到原特征空间。GUI 默认额外执行逐次留出拒识标定，每类至少 3 次录制，使用留出分数下界、片段长度和（短促模式下）冲击强度检查候选。它不再因为模型只有一个就把所有运动归为该类，但**只有正样本仍不能证明未知动作检测可靠**。
+Training fits HMMs on standardized 24-dimensional features, applies a lower bound to state variances, and converts parameters back to the original feature space before export. By default, the GUI also calibrates rejection by holding out individual takes. This requires at least three takes per gesture and checks candidate segments against held-out score floors, segment lengths, and impulse strength in impulse mode. A single-gesture model no longer treats every motion as that gesture, but **positive samples alone do not establish reliable rejection of unknown movements**.
 
-新增滤波初始化、短促分段和拒识参数使用 **v2 导出**；读取 v1 时保留原滤波、分段和离线模型得分。**已有模型不会自动修正，需要重新训练并导出**。
+The **v2 export format** carries the new filter initialization, impulse segmentation, and rejection settings. Loading a v1 model retains its original filtering, segmentation, and offline model scoring. **Existing models are not upgraded automatically. Retrain and export them again.**
 
-点击“留出评估”可在后台验证，每类至少 4 次有效录制：外层每轮留出一次，其余录制再用于训练与内层拒识标定；测试数据不进入归一化、门限或拟合。单类只报告**正样本通过率**，不是完整识别准确率，更不能代表误触率。日志给出各类预测分布和过短录制数。评估不替换当前模型，也不会在每次训练时自动运行；还需独立的连续数据与负样本测试。
+Click **Holdout evaluation** to run a background check with at least four valid takes per gesture. Each outer fold holds out one take and uses the rest for training and inner rejection calibration. Test data is not used for normalization, thresholds, or model fitting. A single-class evaluation reports only the **positive pass rate**, not overall recognition accuracy or a false-trigger rate. The log shows prediction counts by gesture and the number of takes that were too short. Evaluation does not replace the current model, and does not run automatically during training. You still need independent continuous recordings and negative examples.
 
 ```bash
 uv run --locked --package openzilo-gesture-studio python -m openzilo_gesture_studio.evaluation --data sample_data
 ```
 
-此前针对仓库 25 Hz 示例、默认旧式分段/滤波参数且未开启拒识的 5 折比较：旧流程 **19/30（63.3%）**，仅加数值正则化为 **20/30（66.7%）**；提升有限，“向下”“向右”仍有明显混淆。这不是新响指预设或拒识效果的评测。此结果用于开发验证，不代表真实佩戴场景准确率，也不是调参后的独立测试集。建议每个手势录制至少 5–10 次，保持佩戴方向、采样率一致，并另录独立会话测试。录制前后留少量静止、每次只做一个动作；结合滤波预览排查噪声、动作差异及过长的等待片段。
+An earlier five-fold comparison using the repository's 25 Hz examples, legacy segmentation and filter defaults, and no rejection yielded **19/30 (63.3%)** for the old pipeline and **20/30 (66.7%)** after adding only numerical regularization. The gain was small, and downward and rightward movements remained easy to confuse. That comparison did not measure the impulse preset or rejection. It served as a development check, not an independent test after tuning or an accuracy estimate for real-world use. Record at least five to ten takes per gesture, keep the ring orientation and sample rate consistent, and collect a separate test session. Leave a short rest before and after each take, perform one gesture per take, and inspect the filtered preview for noise, differences between takes, and excessive idle time.
 
-## 无 GUI 训练
+## Train without the GUI
+
+From the repository root, train on the six sample gestures:
 
 ```bash
 uv run --locked --package openzilo-gesture-studio openzilo-gesture-train --data sample_data --output exports/demo.gesture.json
 ```
 
-这会训练仓库六类示例数据。只验证流程，不是独立准确率评测。旧 `*.pkl` 不会直接导入；请用录制 JSON 重新训练导出，避免 pickle 的执行风险和缺少预处理参数的问题。
+This checks that the pipeline works; it is not an independent accuracy test. Studio does not directly import old `*.pkl` models. Retrain from recordings in JSON to avoid pickle's code-execution risk and to include the preprocessing parameters in the export.
 
-导出后，使用端只需识别包：在仓库根目录用 `uv sync --locked` 仅同步 `openzilo-gesture`，或在其他 uv 应用中用 `uv add /path/to/OpenZilo-Gesture` 添加依赖。无需此平台、Tkinter 或 OpenZilo SDK：
+After export, the application using the model only needs the [OpenZilo Gesture recognition package](https://pypi.org/project/openzilo-gesture/), without Studio, Tkinter, or the OpenZilo SDK. Use `uv sync --locked` at the repository root to sync only `openzilo-gesture`, or `uv add openzilo-gesture` from another uv project to install the published package.
 
 ```python
 from openzilo_gesture import GestureRecognizer
+
 recognizer = GestureRecognizer.load("exports/demo.gesture.json")
-result = recognizer.predict(samples, sample_rate_hz=25)  # (N, 6) 原始值
+result = recognizer.predict(samples, sample_rate_hz=25)  # Raw values, shape (N, 6)
 for result in recognizer.feed(batch, sample_rate_hz=25):
     print(result.name, result.confidence)
 ```
 
-项目采用 MPL-2.0。Studio 从 PyPI 安装 `openzilo[pcm]>=0.6.3,<0.7`。训练与推理均在电脑端运行。
+The project is licensed under MPL-2.0. Studio installs `openzilo[pcm]>=0.6.3,<0.7` from PyPI. Training and recognition run on the computer.

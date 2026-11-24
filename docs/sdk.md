@@ -67,7 +67,7 @@ Audio operations run alongside the IMU consumer and do not stop, resubscribe or 
 - **Local calibration:** accel/quick/full step-by-step collection, independent validation, then atomic profile replacement. Cancellation/validation failure preserves the previous profile. Profiles bind device identity, model, exact firmware and ranges. Mismatches require explicit reset; no silent migration. Calibrated diagnostic values are g and deg/s, separate from raw gesture training/recognition.
 - **OTA:** select a signed APP ZIP and an independently obtained trusted P-256 PEM public key. Inspect offline, display signed metadata, confirm again, then use the immutable inspected bytes. Test bundles are rejected. While upgrading, other device actions and ordinary exit/disconnect are blocked. Transfer 100% is not success: the SDK must reconnect and verify the running version. Failed/unconfirmed updates are never automatically retried.
 
-远程录音、实时 PCM、本机校准及 OTA 的具体操作见 [Studio 使用说明](../studio/README.md)。校准不会改写戒指参数或已有手势数据，不会把 g/°/s 输入原始计数模型。固件升级后原校准可能失效，需要明确重置后重新校准。可信公钥不得来自待验固件包本身；本项目不替用户建立信任锚。
+远程录音、实时 PCM、本机校准及 OTA 的具体操作见 [Studio 使用说明](../studio/README.zh-CN.md)。校准不会改写戒指参数或已有手势数据，不会把 g/°/s 输入原始计数模型。固件升级后原校准可能失效，需要明确重置后重新校准。可信公钥不得来自待验固件包本身；本项目不替用户建立信任锚。
 
 ## macOS OTA connection tuning / macOS OTA 连接调优
 

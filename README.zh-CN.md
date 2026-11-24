@@ -137,7 +137,7 @@ uv run --locked python examples/recognize_export.py --bundle exports/demo.gestur
     <td valign="top">
       <img src="docs/assets/ui/diagnostics.png" alt="诊断页：合加速度曲线"><br>
       <b>诊断</b><br>
-      实时显示合加速度的大小和方向。读数<b>包含重力</b>，不代表移动方向。详见<a href="studio/README.md#加速度方向与合加速度诊断">计算方式</a>。
+      实时显示合加速度的大小和方向。读数<b>包含重力</b>，不代表移动方向。详见<a href="studio/README.zh-CN.md#加速度方向与合加速度诊断">计算方式</a>。
     </td>
   </tr>
 </table>
@@ -185,7 +185,7 @@ recognizer.reset()  # 断线重连或重新佩戴后调用
 
 | 主题 | 文档 |
 | --- | --- |
-| Studio 详解：短促动作、拒识、录音、校准、固件升级 | [studio/README.md](studio/README.md) |
+| Studio 详解：短促动作、拒识、录音、校准、固件升级 | [studio/README.zh-CN.md](studio/README.zh-CN.md) |
 | 完整 API 与导出格式 | [docs/architecture.md](docs/architecture.md) |
 | SDK 接入与固件契约 | [docs/sdk.md](docs/sdk.md) |
 
