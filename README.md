@@ -8,6 +8,7 @@
 
 <p align="center">
   <a href="https://pypi.org/project/openzilo-gesture-studio/"><img src="https://img.shields.io/pypi/v/openzilo-gesture-studio" alt="OpenZilo Gesture Studio on PyPI"></a>
+  <a href="https://discord.gg/pTJZ3RMHA5"><img src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&amp;logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
@@ -204,6 +205,12 @@ uv build --all-packages --wheel
 ```
 
 Commit `uv.lock` along with any dependency change. Tests don't use real Bluetooth hardware, so check device behavior on a real ring. Report problems in [GitHub Issues](https://github.com/ziloai/OpenZilo-Gesture/issues).
+
+## Community
+
+- [Discord](https://discord.gg/pTJZ3RMHA5)
+- [GitHub Discussions](https://github.com/ziloai/OpenZilo/discussions)
+- [WeChat developer group](https://openzilo.com/#community)
 
 ## License
 

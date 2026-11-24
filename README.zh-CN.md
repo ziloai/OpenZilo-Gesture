@@ -8,6 +8,8 @@
 
 <p align="center">
   <a href="https://pypi.org/project/openzilo-gesture-studio/"><img src="https://img.shields.io/pypi/v/openzilo-gesture-studio" alt="OpenZilo Gesture Studio 的 PyPI 版本"></a>
+  <a href="https://discord.gg/pTJZ3RMHA5"><img src="https://img.shields.io/badge/Discord-join-5865F2?logo=discord&amp;logoColor=white" alt="Discord"></a>
+  <a href="https://openzilo.com/#community"><img src="https://img.shields.io/badge/%E5%BE%AE%E4%BF%A1%E7%BE%A4-%E6%89%AB%E7%A0%81%E5%8A%A0%E5%85%A5-07C160?logo=wechat&amp;logoColor=white" alt="微信开发者群"></a>
 </p>
 
 <p align="center">
@@ -202,6 +204,15 @@ uv build --all-packages --wheel
 ```
 
 修改依赖时，请同时提交 `uv.lock`。测试不使用真实蓝牙硬件，设备行为需要在真实戒指上验证。问题反馈请到 [GitHub Issues](https://github.com/ziloai/OpenZilo-Gesture/issues)。
+
+## 社区
+
+- 微信开发者群
+
+  <img src="docs/assets/wechat-group.png" alt="OpenZilo 开发者微信群二维码" width="160">
+
+- [Discord](https://discord.gg/pTJZ3RMHA5)
+- [GitHub Discussions](https://github.com/ziloai/OpenZilo/discussions)
 
 ## 许可证
 
