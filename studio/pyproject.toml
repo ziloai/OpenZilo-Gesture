@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "openzilo-gesture-studio"
 version = "0.2.0"
 description = "Desktop ring gesture recording, training and export platform"
-readme = "README.pypi.md"
+readme = "README.md"
 requires-python = ">=3.10"
 license = "MPL-2.0"
 license-files = ["LICENSE"]
@@ -17,10 +17,6 @@ dependencies = [
   "pyqtgraph>=0.13.7,<0.15",
   "openzilo[pcm]>=0.6.3,<0.7",
 ]
-
-[project.urls]
-Source = "https://github.com/ziloai/OpenZilo-Gesture"
-Issues = "https://github.com/ziloai/OpenZilo-Gesture/issues"
 
 [project.scripts]
 openzilo-gesture-studio = "openzilo_gesture_studio.launcher:main"

@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://openzilo.com"><img src="docs/assets/openzilo-hero.png" alt="OpenZilo ring" width="960"></a>
+  <a href="https://openzilo.com"><img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/openzilo-hero.png" alt="OpenZilo ring" width="960"></a>
 </p>
 
 <h1 align="center">OpenZilo Gesture Studio & Python Recognition</h1>
@@ -11,9 +11,9 @@
 </p>
 
 <p align="center">
-  <a href="README.zh-CN.md">中文</a> · <a href="#quick-start">Quick start</a> ·
-  <a href="#workflow">Workflow</a> · <a href="#use-it-in-python">Python API</a> ·
-  <a href="#documentation">Docs</a>
+  <a href="https://github.com/ziloai/OpenZilo-Gesture/blob/main/README.zh-CN.md">中文</a> · <a href="https://github.com/ziloai/OpenZilo-Gesture#quick-start">Quick start</a> ·
+  <a href="https://github.com/ziloai/OpenZilo-Gesture#workflow">Workflow</a> · <a href="https://github.com/ziloai/OpenZilo-Gesture#use-it-in-python">Python API</a> ·
+  <a href="https://github.com/ziloai/OpenZilo-Gesture#documentation">Docs</a>
 </p>
 
 Record a few repetitions of a gesture in the desktop app, train a model, and export it as a single file that your Python code can load.
@@ -51,7 +51,7 @@ uv sync --locked --all-packages
 uv run --locked --all-packages openzilo-gesture-studio
 ```
 
-The default Studio interface supports English and Chinese. Use **Settings → Language** in the sidebar to change it. The steps below show labels in both languages.
+The Studio interface is in Chinese, so the steps below give each label with a translation.
 
 ### Train with sample data
 
@@ -80,7 +80,7 @@ This classifies the recordings it was trained on, so it shows that the pipeline 
 
 Scan and select your ring, or enter its address, then click 连接 (Connect). Rings you've connected to are remembered. Recording becomes available once fresh motion data arrives, and no gesture mode needs to be turned on.
 
-<img src="docs/assets/ui/device.png" alt="Device page with the list of available rings" width="800">
+<img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/device.png" alt="Device page with the list of available rings" width="800">
 
 ### 2. Record a gesture
 
@@ -90,7 +90,7 @@ Each take shows its waveform. If automatic cropping misses the gesture, turn on 
 
 The same page imports existing JSON and CSV recordings and deletes saved gestures.
 
-<img src="docs/assets/ui/get.png" alt="Capture page with the recorded waveform and a manual training window" width="800">
+<img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/get.png" alt="Capture page with the recorded waveform and a manual training window" width="800">
 
 ### 3. Train
 
@@ -101,7 +101,7 @@ Choose the preset that fits the gesture, then click 训练全部数据 (Train on
 
 With at least 4 takes per gesture, 留出评估 (Hold-out evaluation) tests on recordings left out of training. Changing the data or settings invalidates the model, so retrain afterwards.
 
-<img src="docs/assets/ui/train.png" alt="Training page with dataset stats and model parameters" width="800">
+<img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/train.png" alt="Training page with dataset stats and model parameters" width="800">
 
 ### 4. Test it live
 
@@ -109,7 +109,7 @@ Turn on 实时试识别 (Live recognition). Start at rest and return to rest bet
 
 Also try everyday movements to see what triggers by mistake. Training only sees examples of your gestures, so it can't guarantee that other movements are rejected.
 
-<img src="docs/assets/ui/realtime.png" alt="Live page outlining recognized up and down gestures on the charts" width="800">
+<img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/realtime.png" alt="Live page outlining recognized up and down gestures on the charts" width="800">
 
 ### 5. Export
 
@@ -120,26 +120,26 @@ On the training page, click 导出模型包 (Export model) to save a `*.gesture.
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="docs/assets/ui/record.png" alt="Ring audio page"><br>
+      <img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/record.png" alt="Ring audio page"><br>
       <b>录音 (Audio)</b><br>
       Record remotely, stream live PCM with optional monitoring, auto-download recordings made with the ring's button, or fetch them from its history.
     </td>
     <td width="50%" valign="top">
-      <img src="docs/assets/ui/tools.png" alt="Device tools page"><br>
+      <img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/tools.png" alt="Device tools page"><br>
       <b>设备工具 (Device tools)</b><br>
       Run guided IMU calibration and signed firmware updates. Calibration stays on your computer and never affects gesture data. A firmware update requires a separately trusted public key, and 100% sent doesn't mean it's installed.
     </td>
   </tr>
   <tr>
     <td valign="top">
-      <img src="docs/assets/ui/about.png" alt="About page"><br>
+      <img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/about.png" alt="About page"><br>
       <b>关于 (About)</b><br>
       Shows versions, repositories and contributors. Opening this page is the only time the app contacts GitHub, and it sends no device or gesture data.
     </td>
     <td valign="top">
-      <img src="docs/assets/ui/diagnostics.png" alt="Diagnostics page with the acceleration magnitude chart"><br>
+      <img src="https://raw.githubusercontent.com/ziloai/OpenZilo-Gesture/main/docs/assets/ui/diagnostics.png" alt="Diagnostics page with the acceleration magnitude chart"><br>
       <b>诊断 (Diagnostics)</b><br>
-      Shows acceleration magnitude and direction in real time. Readings <b>include gravity</b>, so they don't show movement direction. See <a href="studio/README.md#加速度方向与合加速度诊断">how they're calculated</a>.
+      Shows acceleration magnitude and direction in real time. Readings <b>include gravity</b>, so they don't show movement direction. See <a href="https://github.com/ziloai/OpenZilo-Gesture/blob/main/studio/README.zh-CN.md#加速度方向与合加速度诊断">how they're calculated</a>.
     </td>
   </tr>
 </table>
@@ -187,9 +187,9 @@ recognizer.reset()  # after a reconnect or repositioning the ring
 
 | Topic | Document |
 | --- | --- |
-| Studio details: short gestures, rejection, audio, calibration, firmware updates (Chinese) | [studio/README.md](studio/README.md) |
-| Full API and export format (Chinese) | [docs/architecture.md](docs/architecture.md) |
-| SDK integration and firmware contract | [docs/sdk.md](docs/sdk.md) |
+| Studio details: short gestures, rejection, audio, calibration, firmware updates (Chinese) | [studio/README.zh-CN.md](https://github.com/ziloai/OpenZilo-Gesture/blob/main/studio/README.zh-CN.md) |
+| Full API and export format (Chinese) | [docs/architecture.md](https://github.com/ziloai/OpenZilo-Gesture/blob/main/docs/architecture.md) |
+| SDK integration and firmware contract | [docs/sdk.md](https://github.com/ziloai/OpenZilo-Gesture/blob/main/docs/sdk.md) |
 
 ## Older tools
 
@@ -207,4 +207,4 @@ Commit `uv.lock` along with any dependency change. Tests don't use real Bluetoot
 
 ## License
 
-[MPL-2.0](LICENSE), covering the software, documentation, sample data, pretrained models and bundled assets. See [NOTICE.md](NOTICE.md) for dependencies and trademarks.
+[MPL-2.0](https://github.com/ziloai/OpenZilo-Gesture/blob/main/LICENSE), covering the software, documentation, sample data, pretrained models and bundled assets. See [NOTICE.md](https://github.com/ziloai/OpenZilo-Gesture/blob/main/NOTICE.md) for dependencies and trademarks.
