@@ -17,7 +17,7 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequ
 
 from .i18n import tr
 
-API_URL = "https://api.github.com/repos/ziloai/OpenZilo-HMM/contributors?per_page=100"
+API_URL = "https://api.github.com/repos/ziloai/OpenZilo-Gesture/contributors?per_page=100"
 AVATAR_HOST = "avatars.githubusercontent.com"
 PROFILE_HOST = "github.com"
 AVATAR_PIXELS = 144  # Enough for the displayed circle on a 2x screen.
@@ -82,7 +82,7 @@ class ContributorFetcher(QObject):
         if self._manager is None:
             self._manager = QNetworkAccessManager(self)
         request = QNetworkRequest(QUrl(url))
-        request.setHeader(QNetworkRequest.KnownHeaders.UserAgentHeader, "hmm-gesture-studio")
+        request.setHeader(QNetworkRequest.KnownHeaders.UserAgentHeader, "openzilo-gesture-studio")
         request.setRawHeader(b"Accept", b"application/json, image/*")
         request.setTransferTimeout(TIMEOUT_MS)
         reply = self._manager.get(request)

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-"""Wire IDs used by Studio's queue ownership adapter (SDK 0.6.2).
+"""Wire IDs used by Studio's queue ownership adapter (SDK 0.6.3).
 
 These are protocol identifiers, not SDK exports. No private SDK modules are
 imported; only the pinned client's receive queues require private access.

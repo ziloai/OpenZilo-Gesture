@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-"""SDK 0.6.2 transport-level audio/IMU demultiplexing regression tests.
+"""SDK 0.6.3 transport-level audio/IMU demultiplexing regression tests.
 
 Only the BLE transport is fake: Studio's client, SDK framing/CRC, command
 queues, live-audio inbox, parsers and unsubscribe cleanup are real. Private
@@ -17,7 +17,7 @@ import unittest
 import openzilo as sdk
 from openzilo._protocol import AudioCommand, SensorCommand, decode_packet, encode_packet
 
-from hmm_gesture_studio.device import _StudioClient
+from openzilo_gesture_studio.device import _StudioClient
 
 
 TIMEOUT = 2.0
@@ -100,8 +100,8 @@ class SimulatedTransport:
 
 class AudioImuMultiplexTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
-        self.assertEqual(version("openzilo"), "0.6.2",
-                         "Review wire fixtures when changing the pinned SDK")
+        self.assertEqual(version("openzilo"), "0.6.3",
+                         "Review wire fixtures when updating the locked SDK")
         self.transport = SimulatedTransport()
         self.ring = _StudioClient(transport=self.transport, command_timeout_s=TIMEOUT)
         await self.ring.connect()

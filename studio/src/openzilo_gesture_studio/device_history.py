@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import sys
 
-from hmm_gesture.bundle import write_json
+from openzilo_gesture.bundle import write_json
 
 MAX_DEVICES = 20
 MAX_HISTORY_BYTES = 64 * 1024

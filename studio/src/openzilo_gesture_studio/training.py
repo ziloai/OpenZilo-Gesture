@@ -11,10 +11,10 @@ from typing import Callable
 from hmmlearn import hmm
 import numpy as np
 
-from hmm_gesture import GestureBundle, PipelineConfig, RejectionCalibration, SegmentationConfig
-from hmm_gesture.config import integer
-from hmm_gesture.preprocessing import FeatureExtractor, SignalFilter, make_pipeline, validate_samples
-from hmm_gesture.segmentation import impulse_peak, prepare_recording
+from openzilo_gesture import GestureBundle, PipelineConfig, RejectionCalibration, SegmentationConfig
+from openzilo_gesture.config import integer
+from openzilo_gesture.preprocessing import FeatureExtractor, SignalFilter, make_pipeline, validate_samples
+from openzilo_gesture.segmentation import impulse_peak, prepare_recording
 from .datasets import GestureDataset, load_dataset
 
 
@@ -266,13 +266,13 @@ def train_datasets(datasets: list[GestureDataset], pipeline: PipelineConfig,
         notify(f"完成 {dataset.name}: {count}/{len(dataset.repetitions)} 次有效录制，"
                f"{model.n_components} 状态，训练分数 {score:.4f}")
     return GestureBundle(models, pipeline, segmentation, {
-        "created_at": datetime.now().astimezone().isoformat(), "trainer": "hmm-gesture-studio/0.2.0",
+        "created_at": datetime.now().astimezone().isoformat(), "trainer": "openzilo-gesture-studio/0.2.0",
         "training": summaries,
     }, rejection=rejection)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="训练并导出可供 hmm_gesture 加载的手势文件")
+    parser = argparse.ArgumentParser(description="训练并导出可供 openzilo_gesture 加载的手势文件")
     parser.add_argument("--data", default="gestures", help="录制数据目录")
     parser.add_argument("--output", required=True, help="输出文件，例如 gestures.gesture.json")
     parser.add_argument("--n-states", type=int, default=6)

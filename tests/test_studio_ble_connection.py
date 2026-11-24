@@ -5,7 +5,7 @@ from types import SimpleNamespace as NS
 import unittest
 from unittest.mock import Mock, patch
 
-from hmm_gesture_studio import _ble_connection as connection
+from openzilo_gesture_studio import _ble_connection as connection
 
 
 class OtaConnectionTests(unittest.TestCase):

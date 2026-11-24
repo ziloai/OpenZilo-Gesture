@@ -4,14 +4,14 @@
 
 ## 包边界
 
-- 根目录 `pyproject.toml` 构建 `hmm-gesture`，只打包 `src/hmm_gesture/`。生产应用仅安装这个包即可。
-- `studio/pyproject.toml` 构建 `hmm-gesture-studio`，只打包 `studio/src/hmm_gesture_studio/`，单向依赖同版本的识别包及固定提交的官方 SDK。
-- 默认 GUI 使用 PySide6 和 pyqtgraph（`qt/`），旧界面使用 Python 自带的 Tkinter，由 `launcher.py` 选择。它们都不是识别包的依赖；导入 `hmm_gesture` 不加载 Qt、Tk、OpenZilo、Bleak 或训练平台。
+- 根目录 `pyproject.toml` 构建 `openzilo-gesture`，只打包 `src/openzilo_gesture/`。生产应用仅安装这个包即可。
+- `studio/pyproject.toml` 构建 `openzilo-gesture-studio`，只打包 `studio/src/openzilo_gesture_studio/`，单向依赖同版本的识别包及固定提交的官方 SDK。
+- 默认 GUI 使用 PySide6 和 pyqtgraph（`qt/`），旧界面使用 Python 自带的 Tkinter，由 `launcher.py` 选择。它们都不是识别包的依赖；导入 `openzilo_gesture` 不加载 Qt、Tk、OpenZilo、Bleak 或训练平台。
 - `SignalFilter` / `FeatureExtractor` 只有一个实现，训练与推理共用。训练算法放在 Studio；原脚本保留兼容入口。
 - GUI 只在主线程操作 Tk。BLE 拥有独立线程与 asyncio loop，训练在单独工作线程执行，使用队列把状态交回 GUI。
 
 ```text
-hmm_gesture_studio                     hmm_gesture
+openzilo_gesture_studio                     openzilo_gesture
   gui.py ─── datasets.py                 config.py
     │          │                            │
     ├──── training.py ────────────────> preprocessing.py
@@ -27,7 +27,7 @@ legacy CLI ── ring_stream.py ── OpenZilo SDK
 
 Studio 的 `device.py` 把 BLE 连接与 IMU 就绪状态分开。只有收到新 IMU 批次才报告可采集；停报或 DEVICE_BUSY 保留 BLE，等待重试，实际断连才退避重连。数据间断会通知 GUI 取消未完成手势并重置分段。原 `ring_stream.py` 继续服务旧命令行，不改变其一次性采集语义。
 
-音频与 IMU 由独立任务并发消费：自动监听和音频操作都不停止 IMU 上报，也不重新订阅；检测到保存通知或音频帧后接收完整文件，再恢复探测。SDK 0.6.2 自带请求/写锁，Studio 不重复获取 SDK 写锁，只保留发送取消保护与传输观察。远程 FLASH 录音确认保存后下载；实时 LIVE_AND_FLASH 通过 PyAV 接收 PCM，完整 END 后才保存 WAV。下载文件先保存原始字节，再用有时限的 ffmpeg 转 WAV；解码失败不丢原数据。`plotting.py`（旧界面）和 `qt/charts.py`（新界面）只在界面主线程绘制有界滚动数据及识别片段框，录制预览复用训练的 `SignalFilter` 并保留浮点输出，不修改原始录制。`device_history.py` 以原子 JSON 写入本机用户配置目录，仅保存成功连接的最近 20 台设备，不依赖工作目录。Studio 新增的 SDK `pcm` extra 与签名校验依赖不进入独立推理包。详情见 [Studio 指南](../studio/README.md)。
+音频与 IMU 由独立任务并发消费：自动监听和音频操作都不停止 IMU 上报，也不重新订阅；检测到保存通知或音频帧后接收完整文件，再恢复探测。SDK 自带请求/写锁，Studio 保留发送取消保护与传输观察。远程 FLASH 录音确认保存后下载；实时 LIVE_AND_FLASH 通过 PyAV 接收 PCM，完整 END 后才保存 WAV。下载文件先保存原始字节，再用有时限的 ffmpeg 转 WAV；解码失败不丢原数据。`plotting.py`（旧界面）和 `qt/charts.py`（新界面）只在界面主线程绘制有界滚动数据及识别片段框，录制预览复用训练的 `SignalFilter` 并保留浮点输出，不修改原始录制。`device_history.py` 以原子 JSON 写入本机用户配置目录，仅保存成功连接的最近 20 台设备，不依赖工作目录。Studio 新增的 SDK `pcm` extra 与签名校验依赖不进入独立推理包。详情见 [Studio 指南](../studio/README.md)。
 
 “校准与固件”使用同一 BLE worker：校准向导拥有独立 IMU 消费者，校准诊断通过单独事件展示物理单位，绝不送入原始整数模型流水线。OTA 独占连接，包括预期的重启/重连，等待在途电量查询结束并暂停周期查询，不被普通掉线重连逻辑干扰；任何 OTA 尝试后结束当前 Studio 会话，不自动重试。关键边界见 [Studio 设备工具契约](../studio/SPEC.md)。
 
@@ -39,15 +39,15 @@ Studio 的 `device.py` 把 BLE 连接与 IMU 就绪状态分开。只有收到�
 
 ```bash
 uv sync --locked --all-packages                   # 安装训练平台 + 识别包
-uv run --locked --all-packages hmm-gesture-studio  # 启动 GUI
+uv run --locked --all-packages openzilo-gesture-studio  # 启动 GUI
 uv run --locked --all-packages python -m unittest discover -s tests -v
 uv build --all-packages --wheel                   # 两个独立 wheel -> dist/
 ```
 
-仅需要识别包时用 `uv sync --locked`，不带 `--all-packages`；这会移除共用环境中的平台及 BLE 依赖。下次使用平台时，带 `--all-packages` 或 `--package hmm-gesture-studio` 的 `uv run` 会重新同步所需依赖。
+仅需要识别包时用 `uv sync --locked`，不带 `--all-packages`；这会移除共用环境中的平台及 BLE 依赖。下次使用平台时，带 `--all-packages` 或 `--package openzilo-gesture-studio` 的 `uv run` 会重新同步所需依赖。
 
 - `.python-version` 默认选择开发用 Python 3.12；包元数据仍支持 Python 3.10+。CI 通过 `--python` 显式覆盖，测试不同版本。
-- `uv add 包名` 修改识别包依赖；`uv add --package hmm-gesture-studio 包名` 修改平台依赖。
+- `uv add 包名` 修改识别包依赖；`uv add --package openzilo-gesture-studio 包名` 修改平台依赖。
 - 手动修改 `pyproject.toml` 后运行 `uv lock`；依赖升级使用 `uv lock --upgrade-package 包名`。依赖声明与锁文件需一并提交，再同步环境、运行测试。
 - 日常启动与 CI 使用 `--locked`，依赖声明过期时直接报错，不默默改变锁定版本；不要手工编辑 `uv.lock`。
 - PySide6 和 pyqtgraph 是平台的 uv 依赖。Tkinter 属于 Python/系统环境，不是 uv 包依赖，仅旧界面需要；纯推理无需 Qt 或 Tk。
@@ -55,7 +55,7 @@ uv build --all-packages --wheel                   # 两个独立 wheel -> dist/
 ## 公开识别 API
 
 ```python
-from hmm_gesture import GestureRecognizer
+from openzilo_gesture import GestureRecognizer
 
 r = GestureRecognizer.load("gestures.gesture.json", min_confidence=0.0)
 # r.gesture_names: tuple[str, ...]
@@ -90,9 +90,9 @@ r.reset()
 
 ```python
 from pathlib import Path
-from hmm_gesture import PipelineConfig, SegmentationConfig
-from hmm_gesture_studio.datasets import load_dataset
-from hmm_gesture_studio.training import train_datasets
+from openzilo_gesture import PipelineConfig, SegmentationConfig
+from openzilo_gesture_studio.datasets import load_dataset
+from openzilo_gesture_studio.training import train_datasets
 
 datasets = [load_dataset(p) for p in sorted(Path("gestures").glob("*.json"))]
 bundle = train_datasets(
@@ -112,7 +112,7 @@ bundle.save("exports/my-gestures.gesture.json")
 
 每个手势在其训练特征的标准化空间进行 EM，最终每维状态方差至少为标准化单位的 `0.01`。均值/方差随后通过逆仿射变换还原，模型打分包含正确的尺度 Jacobian，不需要给 v1 导出添加 scaler，也不改变旧模型的预处理。常量特征使用单位尺度。新正则化只影响重新训练的模型。
 
-可调用 `evaluate_leave_one_out(datasets, pipeline, n_states=6, segmentation=..., calibrate_rejection=True, progress=print)`（`hmm_gesture_studio.evaluation`），或点击 GUI“留出评估”。开启拒识时每类至少 4 次：外层留出的测试录制不进入内层训练、尺度估计或拒识标定；不开启的兼容模式仍需至少 3 次。各折训练保留手动训练框；留出测试仍对完整录制调用原识别流程（短促模式自动分段），漏触发计为未识别，不以人工选区掩盖检测失败。每次完整录制恰好测试一次。返回 `correct`、`total`、`accuracy`、`per_class`、`confusion`、`skipped_recordings` 及原录制索引的 `predictions`。单类的数值只是正样本通过率，不是未知动作准确率。评估不替换当前模型；连续流误触和跨会话泛化需另测。
+可调用 `evaluate_leave_one_out(datasets, pipeline, n_states=6, segmentation=..., calibrate_rejection=True, progress=print)`（`openzilo_gesture_studio.evaluation`），或点击 GUI“留出评估”。开启拒识时每类至少 4 次：外层留出的测试录制不进入内层训练、尺度估计或拒识标定；不开启的兼容模式仍需至少 3 次。各折训练保留手动训练框；留出测试仍对完整录制调用原识别流程（短促模式自动分段），漏触发计为未识别，不以人工选区掩盖检测失败。每次完整录制恰好测试一次。返回 `correct`、`total`、`accuracy`、`per_class`、`confusion`、`skipped_recordings` 及原录制索引的 `predictions`。单类的数值只是正样本通过率，不是未知动作准确率。评估不替换当前模型；连续流误触和跨会话泛化需另测。
 
 训练数据保留旧 JSON 的 `name`、`sample_rate_hz`、`repetitions[].data` 结构；新数据额外标记 `axes` / `units`。每次重复可选 `training_region: [start, end]`，为零起点、半开样本索引区间，必须满足 `0 <= start < end <= len(data)`；缺失或 `null` 使用原自动策略。Python `GestureDataset.training_regions` 为与 repetitions 对齐的列表（每项为二元组或 `None`），整体 `None` 表示全部自动。保存/追加/导入保留标注，不改变完整原始数组；更改已保存的框会使当前训练模型和评估失效。旧文件缺少采样率时按 25 Hz 解释。数据保存校验原始整数范围，不会因强制转为 int16 而静默溢出；写入采用原子替换，并拒绝净化文件名碰撞。GUI 对已有同名数据先询问追加。
 
@@ -124,7 +124,7 @@ bundle.save("exports/my-gestures.gesture.json")
 
 ```json
 {
-  "format": "hmm-gesture",
+  "format": "openzilo-gesture",
   "version": 1,
   "axes": ["ax", "ay", "az", "gx", "gy", "gz"],
   "units": "raw_int16",

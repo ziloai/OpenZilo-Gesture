@@ -14,7 +14,7 @@ import wave
 
 import openzilo as sdk
 
-from hmm_gesture_studio import audio
+from openzilo_gesture_studio import audio
 
 
 class RecordingTests(unittest.TestCase):
@@ -27,7 +27,7 @@ class RecordingTests(unittest.TestCase):
         self.stack = ExitStack()
         self.addCleanup(self.stack.close)
         self.run = self.stack.enter_context(patch(
-            "hmm_gesture_studio.audio.subprocess.run",
+            "openzilo_gesture_studio.audio.subprocess.run",
             return_value=Mock(returncode=0, stdout=self.pcm, stderr=b""),
         ))
 

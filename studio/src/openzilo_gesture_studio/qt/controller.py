@@ -16,7 +16,7 @@ import time
 import numpy as np
 from PySide6.QtCore import QObject, QTimer, Signal
 
-from hmm_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig
+from openzilo_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig
 
 from ..datasets import GestureDataset, dataset_path, load_dataset, save_dataset
 from .i18n import Text, resolve, tr

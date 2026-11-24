@@ -6,6 +6,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
 from pathlib import Path
+from socket import socket
 import tempfile
 import threading
 import unittest
@@ -20,13 +21,13 @@ try:
 except ImportError as exc:
     raise unittest.SkipTest(f"Qt GUI libraries unavailable: {exc}")
 
-from hmm_gesture_studio.device_history import DeviceHistory
-from hmm_gesture_studio.qt import contributors, theme
-from hmm_gesture_studio.qt.contributors import ContributorFetcher, failure_text, parse_contributors
-from hmm_gesture_studio.qt.controller import StudioController
-from hmm_gesture_studio.qt.pages.about import Avatar, package_version
-from hmm_gesture_studio.qt.theme import apply_theme
-from hmm_gesture_studio.qt.window import MainWindow
+from openzilo_gesture_studio.device_history import DeviceHistory
+from openzilo_gesture_studio.qt import contributors, theme
+from openzilo_gesture_studio.qt.contributors import ContributorFetcher, failure_text, parse_contributors
+from openzilo_gesture_studio.qt.controller import StudioController
+from openzilo_gesture_studio.qt.pages.about import Avatar, package_version
+from openzilo_gesture_studio.qt.theme import apply_theme
+from openzilo_gesture_studio.qt.window import MainWindow
 
 ALICE = dict(login="alice", type="User", avatar_url="https://avatars.githubusercontent.com/u/1?v=4",
              html_url="https://github.com/alice")
@@ -42,7 +43,7 @@ def png_bytes(color="#ff0000", size=8):
 
 
 def setUpModule():
-    from hmm_gesture_studio.qt.i18n import language_manager
+    from openzilo_gesture_studio.qt.i18n import language_manager
     previous = language_manager.preference
     language_manager.set_preference("zh", persist=False)
     unittest.addModuleCleanup(language_manager.set_preference, previous, persist=False)
@@ -159,7 +160,7 @@ class FetcherTests(QtBase):
         fetcher.fetch()
         self.wait(loaded)
         self.wait(avatars)
-        self.assertEqual(self.server.requests[0][1], "hmm-gesture-studio")
+        self.assertEqual(self.server.requests[0][1], "openzilo-gesture-studio")
         self.assertTrue(self.server.requests[1][0].endswith(f"?s={contributors.AVATAR_PIXELS}"))
 
     def test_http_and_connection_failures_are_reported(self):
@@ -170,12 +171,15 @@ class FetcherTests(QtBase):
             fetcher.fetch()
             self.wait(failed)
             self.assertIn(expected, failed.at(0)[0])
-        with patch.object(contributors, "API_URL", "http://127.0.0.1:9/x"):
-            fetcher = self.new_fetcher()
-            failed = QSignalSpy(fetcher.failed)
-            fetcher.fetch()
-            self.wait(failed)
-            self.assertIn("无法连接", failed.at(0)[0])
+        with socket() as unavailable:
+            unavailable.bind(("127.0.0.1", 0))
+            port = unavailable.getsockname()[1]
+            with patch.object(contributors, "API_URL", f"http://127.0.0.1:{port}/x"):
+                fetcher = self.new_fetcher()
+                failed = QSignalSpy(fetcher.failed)
+                fetcher.fetch()
+                self.wait(failed)
+                self.assertIn("无法连接", failed.at(0)[0])
 
     def test_invalid_payload_and_bad_avatar_do_not_crash(self):
         self.server.responses["/contributors"] = (200, b"{oops")
@@ -255,14 +259,14 @@ class PageTests(QtBase):
 
     def test_versions_come_from_installed_metadata(self):
         from importlib import metadata
-        self.assertEqual(self.page.app_version.value.text(), metadata.version("hmm-gesture-studio"))
+        self.assertEqual(self.page.app_version.value.text(), metadata.version("openzilo-gesture-studio"))
         self.assertEqual(self.page.sdk_version.value.text(), metadata.version("OpenZilo"))
 
     def test_repository_links_open_both_projects(self):
         for link in self.page.repository_links:
             link.click()
         self.assertEqual([call.args[0] for call in self.dialogs.open_url.call_args_list],
-                         ["https://github.com/ziloai/OpenZilo-HMM", "https://github.com/ziloai/OpenZilo"])
+                         ["https://github.com/ziloai/OpenZilo-Gesture", "https://github.com/ziloai/OpenZilo"])
 
     def test_contributors_show_name_and_circular_avatar_and_open_profile(self):
         self.server.responses["/contributors"] = (200, json.dumps([ALICE]).encode())

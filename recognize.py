@@ -34,8 +34,8 @@ from signal_filter import SignalFilter
 
 
 # Legacy pickle reader retained for existing scripts. New applications should
-# use hmm_gesture.GestureRecognizer.load() with a portable Studio export.
-from hmm_gesture.segmentation import MotionSegmenter
+# use openzilo_gesture.GestureRecognizer.load() with a portable Studio export.
+from openzilo_gesture.segmentation import MotionSegmenter
 
 
 class HMMRecognizer:

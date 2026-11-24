@@ -5,7 +5,7 @@ import unittest
 
 import numpy as np
 
-from hmm_gesture_studio.acceleration import acceleration_vector
+from openzilo_gesture_studio.acceleration import acceleration_vector
 
 
 class AccelerationVectorTests(unittest.TestCase):

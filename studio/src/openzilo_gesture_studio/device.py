@@ -34,7 +34,7 @@ class _RecordingRequest:
 class _StudioClient(sdk.OpenZiloClient):
     """Observe transfers and finish writes before cancelling.
 
-    SDK 0.6.2 owns write and per-response request locks. Never acquire its write
+    The SDK owns write and per-response request locks. Never acquire its write
     lock here: super().send_command() acquires it internally.
     """
 

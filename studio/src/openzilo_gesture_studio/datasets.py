@@ -10,9 +10,9 @@ import re
 
 import numpy as np
 
-from hmm_gesture.bundle import validate_name, write_json
-from hmm_gesture.config import AXES, positive_number
-from hmm_gesture.preprocessing import validate_samples
+from openzilo_gesture.bundle import validate_name, write_json
+from openzilo_gesture.config import AXES, positive_number
+from openzilo_gesture.preprocessing import validate_samples
 
 
 def validate_training_region(region, sample_count: int) -> tuple[int, int] | None:

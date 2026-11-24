@@ -1,11 +1,11 @@
-# OpenZilo-HMM
+# OpenZilo-Gesture
 
-uv 工作区：`hmm-gesture`（`src/`，只做识别推理）与 `hmm-gesture-studio`（`studio/`，桌面平台）。
+uv 工作区：`openzilo-gesture`（`src/`，只做识别推理）与 `openzilo-gesture-studio`（`studio/`，桌面平台）。
 
 ```bash
 uv sync --locked --all-packages
-uv run --locked --all-packages hmm-gesture-studio               # 新界面（PySide6）
-uv run --locked --all-packages hmm-gesture-studio --ui legacy   # 旧界面（Tkinter）
+uv run --locked --all-packages openzilo-gesture-studio               # 新界面（PySide6）
+uv run --locked --all-packages openzilo-gesture-studio --ui legacy   # 旧界面（Tkinter）
 uv run --locked --all-packages python -m unittest discover -s tests -v
 ```
 
@@ -13,10 +13,10 @@ uv run --locked --all-packages python -m unittest discover -s tests -v
 
 ## 两套界面
 
-- **新界面** `studio/src/hmm_gesture_studio/qt/`：所有新功能都做在这里。
+- **新界面** `studio/src/openzilo_gesture_studio/qt/`：所有新功能都做在这里。
 - **旧界面** `gui.py`、`sdk_controls.py` 的控件部分、`plotting.py`、`acceleration_view.py`：只保留，不加功能，也不为新界面改动。
 - `launcher.py` 选择界面，且在选定前不导入任何一方。
-- 依赖方向：`qt/` 可以导入 `device.py`、`training.py`、`datasets.py` 等无界面模块，以及旧模块里的纯函数；旧界面不导入 `qt/`。`hmm-gesture` 不得依赖 Qt。
+- 依赖方向：`qt/` 可以导入 `device.py`、`training.py`、`datasets.py` 等无界面模块，以及旧模块里的纯函数；旧界面不导入 `qt/`。`openzilo-gesture` 不得依赖 Qt。
 
 ### 新界面结构
 

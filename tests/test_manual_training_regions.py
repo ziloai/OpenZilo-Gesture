@@ -10,10 +10,10 @@ from unittest.mock import patch
 
 import numpy as np
 
-from hmm_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig
-from hmm_gesture.segmentation import prepare_recording
-from hmm_gesture_studio import evaluation, training
-from hmm_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
+from openzilo_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig
+from openzilo_gesture.segmentation import prepare_recording
+from openzilo_gesture_studio import evaluation, training
+from openzilo_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
 
 
 def weak_takes(count=4):

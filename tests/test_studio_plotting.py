@@ -8,7 +8,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
-from hmm_gesture_studio.plotting import (
+from openzilo_gesture_studio.plotting import (
     IMUPlot, MAX_SAMPLES, MAX_REGIONS, RollingIMUBuffer, axis_limits, curve_points,
     RecordingPlot, RecognitionRegion, region_bounds,
 )
@@ -318,7 +318,7 @@ def guarded(name, *args, **kwargs):
         raise ImportError('Tk intentionally unavailable')
     return original(name, *args, **kwargs)
 builtins.__import__ = guarded
-from hmm_gesture_studio.plotting import RollingIMUBuffer, IMUPlot, RecordingPlot
+from openzilo_gesture_studio.plotting import RollingIMUBuffer, IMUPlot, RecordingPlot
 assert len(RollingIMUBuffer()) == 0
 """
         result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
@@ -331,8 +331,8 @@ class RecordingPreviewTests(unittest.TestCase):
 
     def test_preview_matches_training_filter_without_modifying_raw(self):
         import numpy as np
-        from hmm_gesture import PipelineConfig
-        from hmm_gesture.preprocessing import make_pipeline
+        from openzilo_gesture import PipelineConfig
+        from openzilo_gesture.preprocessing import make_pipeline
         plot = self.make_plot()
         data = np.random.default_rng(3).integers(-10000, 10000, (600, 6))
         original = data.copy()
@@ -355,8 +355,8 @@ class RecordingPreviewTests(unittest.TestCase):
 
     def test_impulse_preview_marks_training_context_and_filters_it_identically(self):
         import numpy as np
-        from hmm_gesture import PipelineConfig, SegmentationConfig
-        from hmm_gesture.preprocessing import make_pipeline
+        from openzilo_gesture import PipelineConfig, SegmentationConfig
+        from openzilo_gesture.preprocessing import make_pipeline
         plot = self.make_plot()
         data = np.zeros((100, 6))
         data[:, 2] = 2000
@@ -378,8 +378,8 @@ class RecordingPreviewTests(unittest.TestCase):
 
     def test_manual_crop_overrides_automatic_filtering_and_preserves_raw(self):
         import numpy as np
-        from hmm_gesture import PipelineConfig, SegmentationConfig
-        from hmm_gesture.preprocessing import make_pipeline
+        from openzilo_gesture import PipelineConfig, SegmentationConfig
+        from openzilo_gesture.preprocessing import make_pipeline
         plot = self.make_plot()
         data = np.zeros((100, 6), dtype=np.int16)
         data[:, 2] = 2000
@@ -414,7 +414,7 @@ class RecordingPreviewTests(unittest.TestCase):
         self.assertIsNone(plot._training_region)
 
     def test_manual_crop_works_with_zero_windows_and_without_impulse_mode(self):
-        from hmm_gesture import PipelineConfig, SegmentationConfig
+        from openzilo_gesture import PipelineConfig, SegmentationConfig
         pipeline = PipelineConfig(median_kernel=1)
         data = [row()] * 100
         for segmentation in (None, SegmentationConfig.for_sample_rate(25, mode="impulse")):
@@ -428,7 +428,7 @@ class RecordingPreviewTests(unittest.TestCase):
                 self.assertNotIn("无法训练", status)
 
     def test_short_manual_crop_is_shown_as_invalid_not_trainable(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         plot = self.make_plot()
         pipeline = PipelineConfig(median_kernel=1)
         plot.show_recording([row()] * 50, pipeline, training_region=(10, 13))
@@ -445,7 +445,7 @@ class RecordingPreviewTests(unittest.TestCase):
                             for call in plot.canvas.create_text.call_args_list))
 
     def test_manual_crop_uses_shared_strict_interval_validation(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         plot = self.make_plot()
         pipeline = PipelineConfig()
         for region in ((-1, 12), (1, 1), (0, 101), (True, 12), (1.0, 12), [1], "1,12"):
@@ -453,7 +453,7 @@ class RecordingPreviewTests(unittest.TestCase):
                 plot.show_recording([row()] * 100, pipeline, training_region=region)
 
     def test_hidden_preview_redraw_is_deferred_and_invalid_input_rejected(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         plot = self.make_plot()
         with self.assertRaises(ValueError):
             plot.show_recording([[40000] * 6] * 12, PipelineConfig())
@@ -478,7 +478,7 @@ class RecordingSelectionTests(unittest.TestCase):
         return 72 + (index - 0.5) * 630 / (count - 1)
 
     def make_plot(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         callback = Mock()
         plot = make_recording_plot(callback)
         plot.show_recording([row()] * 101, PipelineConfig(median_kernel=1))
@@ -527,7 +527,7 @@ class RecordingSelectionTests(unittest.TestCase):
 
     def test_drag_previews_one_shared_box_then_controller_replaces_and_resets(self):
         import numpy as np
-        from hmm_gesture import PipelineConfig, SegmentationConfig
+        from openzilo_gesture import PipelineConfig, SegmentationConfig
         data = np.zeros((101, 6), dtype=np.int16)
         original = data.copy()
         controller = FakeRecordingController(
@@ -594,7 +594,7 @@ class RecordingSelectionTests(unittest.TestCase):
         callback.assert_not_called()
 
     def test_disabled_read_only_short_and_empty_previews_do_not_edit(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         pipeline = PipelineConfig(median_kernel=1)
         for size in (0, pipeline.min_samples - 1, 101):
             for editable, has_callback in ((False, True), (True, False), (True, True)):
@@ -623,7 +623,7 @@ class RecordingSelectionTests(unittest.TestCase):
         callback.assert_called_once_with((0, pipeline.min_samples))
 
     def test_temporary_disable_and_recording_switch_preserve_authoritative_regions(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         plot, callback = self.make_plot()
         pipeline = PipelineConfig(median_kernel=1)
         plot.show_recording([row()] * 101, pipeline, training_region=(10, 50))
@@ -654,7 +654,7 @@ class RecordingSelectionTests(unittest.TestCase):
         callback.assert_called_once_with((40, 80))
 
     def test_short_drag_is_invalid_preview_and_controller_rejects_without_commit(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         controller = FakeRecordingController([row()] * 101, PipelineConfig(median_kernel=1))
         plot = controller.plot
         self.enable(plot)
@@ -676,7 +676,7 @@ class RecordingSelectionTests(unittest.TestCase):
         self.assertIsNone(plot._drag_region)
 
     def test_switch_clear_disable_toggle_resize_and_cancel_discard_unfinished_drag(self):
-        from hmm_gesture import PipelineConfig
+        from openzilo_gesture import PipelineConfig
         for action in ("switch", "clear", "disable", "toggle", "resize", "cancel", "restore"):
             with self.subTest(action=action):
                 plot, callback = self.make_plot()

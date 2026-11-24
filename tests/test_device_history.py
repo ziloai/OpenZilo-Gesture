@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from hmm_gesture_studio.device_history import DeviceHistory, MAX_DEVICES, history_path
+from openzilo_gesture_studio.device_history import DeviceHistory, MAX_DEVICES, history_path
 
 
 class DeviceHistoryTests(unittest.TestCase):
@@ -54,7 +54,7 @@ class DeviceHistoryTests(unittest.TestCase):
         history = DeviceHistory(self.path)
         history.remember("old", "first")
         before = self.path.read_bytes()
-        with patch("hmm_gesture.bundle.os.replace", side_effect=OSError("read only")):
+        with patch("openzilo_gesture.bundle.os.replace", side_effect=OSError("read only")):
             with self.assertRaises(OSError):
                 history.remember("new")
             with self.assertRaises(OSError):
@@ -70,8 +70,8 @@ class DeviceHistoryTests(unittest.TestCase):
                 history.remember(address, name)
         self.assertFalse(self.path.exists())
 
-    def test_settings_path_is_not_working_directory(self):
-        with patch("hmm_gesture_studio.device_history.sys.platform", "linux"), patch.dict(os.environ, XDG_CONFIG_HOME="/tmp/example-settings"):
+    def test_settings_keep_the_existing_device_history_path(self):
+        with patch("openzilo_gesture_studio.device_history.sys.platform", "linux"), patch.dict(os.environ, XDG_CONFIG_HOME="/tmp/example-settings"):
             self.assertEqual(history_path(), Path("/tmp/example-settings/hmm-gesture-studio/devices.json"))
 
 

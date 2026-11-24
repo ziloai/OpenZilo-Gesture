@@ -12,7 +12,7 @@ import wave
 
 import openzilo as sdk
 
-from hmm_gesture_studio import remote_audio
+from openzilo_gesture_studio import remote_audio
 
 
 S = sdk.AudioRecordingState
@@ -222,7 +222,7 @@ class RemoteAudioTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.wav_builder.call_count, 2)
 
     async def test_playback_is_opt_in_and_never_used_for_flash(self):
-        with patch('hmm_gesture_studio.playback.PcmPlayback') as player:
+        with patch('openzilo_gesture_studio.playback.PcmPlayback') as player:
             self.stream()
             await self.run_record(live=True)
             await self.run_record(playback=True)
@@ -239,7 +239,7 @@ class RemoteAudioTests(unittest.IsolatedAsyncioTestCase):
                     self.assertNotIn('live_end', self.trace)
                 monitor.feed.side_effect = feed
                 self.trace.clear()
-                with patch('hmm_gesture_studio.playback.PcmPlayback', return_value=monitor):
+                with patch('openzilo_gesture_studio.playback.PcmPlayback', return_value=monitor):
                     await self.run_record(live=True, playback=True)
                 monitor.start.assert_called_once_with(sdk.PcmConfig(16000, channels, 16))
                 self.assertEqual(b''.join(call.args[0] for call in monitor.feed.call_args_list), pcm)
@@ -272,7 +272,7 @@ class RemoteAudioTests(unittest.IsolatedAsyncioTestCase):
     async def test_playback_does_not_receive_invalid_frame_or_allow_partial_save(self):
         stream, _ = self.stream()
         stream.events[1] = sdk.LivePcmFrame(41, 999, 320, b'bad', sdk.PcmConfig(16000, 2, 16))
-        with patch('hmm_gesture_studio.playback.PcmPlayback') as player:
+        with patch('openzilo_gesture_studio.playback.PcmPlayback') as player:
             with self.assertRaises(sdk.ProtocolError):
                 await self.run_record(live=True, playback=True)
         player.return_value.feed.assert_not_called()
@@ -284,7 +284,7 @@ class RemoteAudioTests(unittest.IsolatedAsyncioTestCase):
             with self.subTest(failure=failure):
                 stream, _ = self.stream()
                 stream.events[-1] = failure
-                with patch('hmm_gesture_studio.playback.PcmPlayback') as player:
+                with patch('openzilo_gesture_studio.playback.PcmPlayback') as player:
                     with self.assertRaises((sdk.ProtocolError, sdk.TransportError)):
                         await self.run_record(live=True, playback=True)
                 player.return_value.close.assert_called_once()
@@ -304,7 +304,7 @@ class RemoteAudioTests(unittest.IsolatedAsyncioTestCase):
             loop.call_soon_threadsafe(closing.set)
             if not release.wait(3):
                 raise RuntimeError('test cleanup was not released')
-        with patch('hmm_gesture_studio.playback.PcmPlayback') as player:
+        with patch('openzilo_gesture_studio.playback.PcmPlayback') as player:
             player.return_value.close.side_effect = close
             task = asyncio.create_task(self.run_record(live=True, playback=True))
             try:

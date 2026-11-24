@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MPL-2.0
 """Opt-in recording-level validation, without GUI or training-set accuracy.
 
-Usage: python -m hmm_gesture_studio.evaluation --data sample_data
+Usage: python -m openzilo_gesture_studio.evaluation --data sample_data
 """
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ import argparse
 from pathlib import Path
 from typing import Callable, TypedDict
 
-from hmm_gesture import GestureRecognizer, PipelineConfig, SegmentationConfig
-from hmm_gesture.config import integer
+from openzilo_gesture import GestureRecognizer, PipelineConfig, SegmentationConfig
+from openzilo_gesture.config import integer
 from .datasets import GestureDataset, load_dataset
 from .training import _prepare_repetitions, train_datasets
 

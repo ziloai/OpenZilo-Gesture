@@ -7,9 +7,9 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
-from hmm_gesture_studio.acceleration import acceleration_vector
-from hmm_gesture_studio.acceleration_view import AccelerationView, reading_text
-from hmm_gesture_studio.plotting import RollingIMUBuffer
+from openzilo_gesture_studio.acceleration import acceleration_vector
+from openzilo_gesture_studio.acceleration_view import AccelerationView, reading_text
+from openzilo_gesture_studio.plotting import RollingIMUBuffer
 
 
 class Var:
@@ -226,7 +226,7 @@ class AccelerationViewTests(unittest.TestCase):
         self.assertIn("2.0000 g", view._magnitude.get())
 
     def test_import_has_no_tk_or_sdk_side_effects(self):
-        result = subprocess.run([sys.executable, "-c", "import sys; import hmm_gesture_studio.acceleration_view; "
+        result = subprocess.run([sys.executable, "-c", "import sys; import openzilo_gesture_studio.acceleration_view; "
                                  "assert 'tkinter' not in sys.modules; assert 'openzilo' not in sys.modules"],
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)

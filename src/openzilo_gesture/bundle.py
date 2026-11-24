@@ -179,7 +179,7 @@ class GestureBundle:
         except (json.JSONDecodeError, UnicodeError) as exc:
             raise ValueError("Not a valid UTF-8 gesture JSON bundle (pickle is not supported)") from exc
         if not isinstance(raw, dict) or raw.get("format") != FORMAT:
-            raise ValueError("Not a hmm-gesture bundle; retrain/export legacy pickle models in Studio")
+            raise ValueError("Not a openzilo-gesture bundle; retrain/export legacy pickle models in Studio")
         if type(raw.get("version")) is not int or raw["version"] not in (1, FORMAT_VERSION):
             raise ValueError(f"Unsupported gesture bundle version: {raw.get('version')}")
         if raw.get("axes") != list(AXES) or raw.get("units") != "raw_int16":

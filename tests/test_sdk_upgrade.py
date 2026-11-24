@@ -5,8 +5,8 @@ from collections import defaultdict
 from types import SimpleNamespace
 import unittest
 from unittest.mock import AsyncMock, Mock
-from hmm_gesture_studio import device
-from hmm_gesture_studio.wire import AudioCommand
+from openzilo_gesture_studio import device
+from openzilo_gesture_studio.wire import AudioCommand
 
 
 class UpgradeTests(unittest.IsolatedAsyncioTestCase):

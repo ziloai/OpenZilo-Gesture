@@ -20,24 +20,39 @@
 
 | 发行包 | 用途 | 依赖 |
 | --- | --- | --- |
-| `hmm-gesture-studio` | 桌面应用：连接、录制、训练、试识别，以及戒指录音和设备工具 | OpenZilo SDK、PySide6、蓝牙 |
-| `hmm-gesture` | 加载导出的模型并识别手势 | 仅 NumPy、SciPy、hmmlearn |
+| `openzilo-gesture-studio` | 桌面应用：连接、录制、训练、试识别，以及戒指录音和设备工具 | OpenZilo SDK、PySide6、蓝牙 |
+| `openzilo-gesture` | 加载导出的模型并识别手势 | 仅 NumPy、SciPy、hmmlearn |
 
 ## 快速开始
 
-需要 [uv](https://docs.astral.sh/uv/getting-started/installation/)、Git 和图形桌面环境。两个包都支持 Python 3.10+。
+两个包都支持 Python 3.10+。先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)，运行 Studio 还需要图形桌面环境。
+
+### 从 PyPI 安装
 
 ```bash
-git clone https://github.com/ziloai/OpenZilo-HMM.git
-cd OpenZilo-HMM
-uv sync --locked --all-packages
-uv run --locked --all-packages hmm-gesture-studio
+uvx openzilo-gesture-studio
+uv add openzilo-gesture
 ```
 
-**手边没有戒指？** 可以用仓库自带的示例数据训练，共六类手势，每类五次，采样率 25 Hz：
+第一条命令直接打开 Studio。第二条命令在你自己的 uv 项目里运行，用来添加 Python 识别包。
+
+### 从源码运行
+
+用 Git 克隆仓库：
 
 ```bash
-uv run --locked --package hmm-gesture-studio hmm-gesture-train --data sample_data --output exports/demo.gesture.json
+git clone https://github.com/ziloai/OpenZilo-Gesture.git
+cd OpenZilo-Gesture
+uv sync --locked --all-packages
+uv run --locked --all-packages openzilo-gesture-studio
+```
+
+### 用样例数据试训练
+
+手边没有戒指时，可以用仓库里的 `sample_data/` 训练。数据包含六类手势，每类五次，采样率 25 Hz：
+
+```bash
+uv run --locked --package openzilo-gesture-studio openzilo-gesture-train --data sample_data --output exports/demo.gesture.json
 uv run --locked python examples/recognize_export.py --bundle exports/demo.gesture.json --input "sample_data/向上.json"
 ```
 
@@ -128,13 +143,13 @@ uv run --locked python examples/recognize_export.py --bundle exports/demo.gestur
 把识别包添加到你的项目。它不会安装 Studio、Qt 或蓝牙 SDK：
 
 ```bash
-uv add /path/to/OpenZilo-HMM
+uv add /path/to/OpenZilo-Gesture
 ```
 
 识别一次完整的手势，其中 `samples` 是 `(N, 6)` 的数组：
 
 ```python
-from hmm_gesture import GestureRecognizer
+from openzilo_gesture import GestureRecognizer
 
 recognizer = GestureRecognizer.load("demo.gesture.json")
 print(recognizer.gesture_names, recognizer.sample_rate_hz)
@@ -172,8 +187,8 @@ recognizer.reset()  # 断线重连或重新佩戴后调用
 
 ## 旧版工具
 
-- **Tkinter 界面：** `uv run --locked --all-packages hmm-gesture-studio --ui legacy`，需要带 Tkinter 的 Python。
-- **命令行脚本：** `record_gesture.py`、`train_hmm.py`、`recognize.py` 仍可使用。它们使用 `.pkl` 模型，Studio 和 `hmm-gesture` 不导入这种格式；要得到 `*.gesture.json`，请用 JSON 录制重新训练。**只加载可信的 pickle 文件**，因为加载时可能执行代码。`record_gesture.py` 会覆盖同名录制。
+- **Tkinter 界面：** `uv run --locked --all-packages openzilo-gesture-studio --ui legacy`，需要带 Tkinter 的 Python。
+- **命令行脚本：** `record_gesture.py`、`train_hmm.py`、`recognize.py` 仍可使用。它们使用 `.pkl` 模型，Studio 和 `openzilo-gesture` 不导入这种格式；要得到 `*.gesture.json`，请用 JSON 录制重新训练。**只加载可信的 pickle 文件**，因为加载时可能执行代码。`record_gesture.py` 会覆盖同名录制。
 
 ## 开发
 
@@ -182,7 +197,7 @@ uv run --locked --all-packages python -m unittest discover -s tests -v
 uv build --all-packages --wheel
 ```
 
-修改依赖时，请同时提交 `uv.lock`。测试不使用真实蓝牙硬件，设备行为需要在真实戒指上验证。问题反馈请到 [GitHub Issues](https://github.com/ziloai/OpenZilo-HMM/issues)。
+修改依赖时，请同时提交 `uv.lock`。测试不使用真实蓝牙硬件，设备行为需要在真实戒指上验证。问题反馈请到 [GitHub Issues](https://github.com/ziloai/OpenZilo-Gesture/issues)。
 
 ## 许可证
 

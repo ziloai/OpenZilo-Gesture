@@ -19,15 +19,15 @@ except ImportError as exc:  # Headless Linux without libEGL/libGL; CI installs t
 
 import numpy as np
 
-from hmm_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
-from hmm_gesture_studio.device_history import DeviceHistory
-from hmm_gesture_studio.qt.controller import StudioController
-from hmm_gesture_studio.qt import contributors, theme
-from hmm_gesture_studio.qt.charts import LiveImuChart
-from hmm_gesture_studio.qt.motion import CrossFade
-from hmm_gesture_studio.qt.theme import apply_theme
-from hmm_gesture_studio.qt.widgets import Switch
-from hmm_gesture_studio.qt.window import LOG_HEIGHT, MainWindow, NAV
+from openzilo_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
+from openzilo_gesture_studio.device_history import DeviceHistory
+from openzilo_gesture_studio.qt.controller import StudioController
+from openzilo_gesture_studio.qt import contributors, theme
+from openzilo_gesture_studio.qt.charts import LiveImuChart
+from openzilo_gesture_studio.qt.motion import CrossFade
+from openzilo_gesture_studio.qt.theme import apply_theme
+from openzilo_gesture_studio.qt.widgets import Switch
+from openzilo_gesture_studio.qt.window import LOG_HEIGHT, MainWindow, NAV
 
 # The about page fetches when shown; tests must never reach the real GitHub.
 contributors.API_URL = "http://127.0.0.1:9/contributors"
@@ -37,7 +37,7 @@ ACTIVE = dict(state="active", message="IMU 正常上报", sample_rate_hz=25.0, a
 
 
 def setUpModule():
-    from hmm_gesture_studio.qt.i18n import language_manager
+    from openzilo_gesture_studio.qt.i18n import language_manager
     previous = language_manager.preference
     language_manager.set_preference("zh", persist=False)
     unittest.addModuleCleanup(language_manager.set_preference, previous, persist=False)
