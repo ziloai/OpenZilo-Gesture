@@ -6,7 +6,6 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
 from pathlib import Path
-from socket import socket
 import tempfile
 import threading
 import unittest
@@ -96,6 +95,9 @@ class Server:
             def do_GET(self):
                 outer.requests.append((self.path, self.headers.get("User-Agent")))
                 status, body = outer.responses.get(self.path.split("?")[0], (404, b"{}"))
+                if status is None:
+                    self.close_connection = True
+                    return
                 self.send_response(status)
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
@@ -171,15 +173,12 @@ class FetcherTests(QtBase):
             fetcher.fetch()
             self.wait(failed)
             self.assertIn(expected, failed.at(0)[0])
-        with socket() as unavailable:
-            unavailable.bind(("127.0.0.1", 0))
-            port = unavailable.getsockname()[1]
-            with patch.object(contributors, "API_URL", f"http://127.0.0.1:{port}/x"):
-                fetcher = self.new_fetcher()
-                failed = QSignalSpy(fetcher.failed)
-                fetcher.fetch()
-                self.wait(failed)
-                self.assertIn("无法连接", failed.at(0)[0])
+        self.server.responses["/contributors"] = (None, b"")
+        fetcher = self.new_fetcher()
+        failed = QSignalSpy(fetcher.failed)
+        fetcher.fetch()
+        self.wait(failed)
+        self.assertIn("无法连接", failed.at(0)[0])
 
     def test_invalid_payload_and_bad_avatar_do_not_crash(self):
         self.server.responses["/contributors"] = (200, b"{oops")

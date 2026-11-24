@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-"""Real widgets on Qt's offscreen platform, with a fake worker: no display or ring."""
+"""Real Qt widgets with a fake worker and no ring."""
 from __future__ import annotations
 
 import os
@@ -12,7 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 try:
     from PySide6.QtCore import QEvent, QPoint, QPointF, Qt, QVariantAnimation
     from PySide6.QtGui import QCloseEvent, QKeySequence, QMouseEvent
-    from PySide6.QtTest import QTest
+    from PySide6.QtTest import QSignalSpy, QTest
     from PySide6.QtWidgets import QApplication, QWidget
 except ImportError as exc:  # Headless Linux without libEGL/libGL; CI installs them.
     raise unittest.SkipTest(f"Qt GUI libraries unavailable: {exc}")
@@ -332,10 +332,11 @@ class WindowTests(unittest.TestCase):
         self.c.log("新消息")
         self.assertIn("新消息", bar.latest.text())
         self.assertFalse(bar.view.isVisible())
+        opened = QSignalSpy(bar._motion.finished)
         bar.toggle.click()
         self.assertTrue(bar.view.isVisible())
         self.assertLess(bar.view.height(), LOG_HEIGHT, "starts opening rather than jumping")
-        QTest.qWait(theme.MOTION + 80)
+        self.assertTrue(opened.wait(3000))
         self.assertEqual(bar.view.height(), LOG_HEIGHT)
         self.c.handle("warning", "注意")
         self.c.error("出错了\n第二行")
@@ -350,8 +351,9 @@ class WindowTests(unittest.TestCase):
         bar.view.setCurrentItem(last)
         QTest.keySequence(bar.view, QKeySequence(QKeySequence.StandardKey.Copy))
         self.assertIn("错误：出错了", QApplication.clipboard().text())
+        closed = QSignalSpy(bar._motion.finished)
         bar.toggle.click()
-        QTest.qWait(theme.MOTION + 80)
+        self.assertTrue(closed.wait(3000))
         self.assertFalse(bar.view.isVisible())
 
     def test_opening_log_shows_newest_message(self):
