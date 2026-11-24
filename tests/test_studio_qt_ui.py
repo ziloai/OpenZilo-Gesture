@@ -381,6 +381,7 @@ class WindowTests(unittest.TestCase):
         self.assertEqual(scroll.value(), 0)
 
     def test_capture_page_has_no_live_waveform(self):
+        self.win.setFixedSize(1280, 860)
         page = self.win.pages["capture"]
         self.pump()
         panel = page.chart.gyro
