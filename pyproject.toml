@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "openzilo-gesture"
 version = "0.2.0"
 description = "Portable six-axis IMU gesture recognition with exported HMM models"
-readme = "README.md"
+readme = "README.pypi.md"
 requires-python = ">=3.10"
 license = "MPL-2.0"
 license-files = ["LICENSE", "NOTICE.md"]
@@ -15,6 +15,10 @@ dependencies = [
   "scipy>=1.10,<2",
   "hmmlearn>=0.3.3,<0.4",
 ]
+
+[project.urls]
+Source = "https://github.com/ziloai/OpenZilo-Gesture"
+Issues = "https://github.com/ziloai/OpenZilo-Gesture/issues"
 
 [tool.uv.workspace]
 members = ["studio"]

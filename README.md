@@ -51,7 +51,7 @@ uv sync --locked --all-packages
 uv run --locked --all-packages openzilo-gesture-studio
 ```
 
-The Studio interface is in Chinese, so the steps below give each label with a translation.
+The default Studio interface supports English and Chinese. Use **Settings → Language** in the sidebar to change it. The steps below show labels in both languages.
 
 ### Train with sample data
 
