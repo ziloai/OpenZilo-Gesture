@@ -4,7 +4,7 @@
 
 <h1 align="center">OpenZilo 手势训练平台与 Python 识别包</h1>
 
-<p align="center">为你的 OpenZilo 戒指手势训练基于 HMM 的模型，再在 Python 中识别。</p>
+<p align="center">让 OpenZilo 戒指学会你的手势，并在自己的 Python 程序里识别它们。</p>
 
 <p align="center">
   <a href="README.md">English</a> · <a href="#快速开始">快速开始</a> ·

@@ -4,7 +4,7 @@
 
 <h1 align="center">OpenZilo Gesture Studio & Python Recognition</h1>
 
-<p align="center">Train HMM-based models for your own OpenZilo ring gestures and recognize them in Python.</p>
+<p align="center">Teach an OpenZilo ring your own gestures, then recognize them in your Python app.</p>
 
 <p align="center">
   <a href="README.zh-CN.md">中文</a> · <a href="#quick-start">Quick start</a> ·
