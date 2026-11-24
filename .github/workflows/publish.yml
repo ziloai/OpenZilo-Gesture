@@ -6,13 +6,22 @@ on:
 
 jobs:
   publish:
+    name: Publish ${{ matrix.package }}
     runs-on: ubuntu-latest
-    environment: pypi
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: openzilo-gesture
+            environment: pypi
+          - package: openzilo-gesture-studio
+            environment: pypi-studio
+    environment: ${{ matrix.environment }}
     permissions:
       id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - run: uv build --all-packages
-      - run: uv publish --trusted-publishing always
+      - run: uv build --package "${{ matrix.package }}" --no-sources
+      - run: uv publish --trusted-publishing always --check-url https://pypi.org/simple
