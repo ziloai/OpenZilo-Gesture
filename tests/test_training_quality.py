@@ -17,10 +17,10 @@ from unittest.mock import Mock, patch
 from hmmlearn.hmm import GaussianHMM
 import numpy as np
 
-from hmm_gesture import GestureBundle, GestureRecognizer, PipelineConfig
-from hmm_gesture.preprocessing import make_pipeline
-from hmm_gesture_studio import evaluation, training
-from hmm_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
+from openzilo_gesture import GestureBundle, GestureRecognizer, PipelineConfig
+from openzilo_gesture.preprocessing import make_pipeline
+from openzilo_gesture_studio import evaluation, training
+from openzilo_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -307,7 +307,7 @@ class HeldOutEvaluationTests(unittest.TestCase):
 
     def test_standalone_cli_reports_counts_and_errors_on_too_few_recordings(self):
         with tempfile.TemporaryDirectory() as folder:
-            command = [sys.executable, "-m", "hmm_gesture_studio.evaluation", "--data"]
+            command = [sys.executable, "-m", "openzilo_gesture_studio.evaluation", "--data"]
             result = subprocess.run([*command, str(ROOT / "sample_data")], cwd=folder,
                                     capture_output=True, text=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

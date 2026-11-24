@@ -185,8 +185,8 @@ class RecordingView:
 def analyze_recording(samples, pipeline, *, segmentation=None, training_region=None) -> RecordingView:
     """Show exactly what training sees; raw data stays untouched and floating-point
     filter output may overshoot int16."""
-    from hmm_gesture.preprocessing import make_pipeline, validate_samples
-    from hmm_gesture.segmentation import MotionSegmenter, impulse_peak, prepare_recording
+    from openzilo_gesture.preprocessing import make_pipeline, validate_samples
+    from openzilo_gesture.segmentation import MotionSegmenter, impulse_peak, prepare_recording
     from ..datasets import validate_training_region
 
     data = validate_samples(samples)

@@ -18,11 +18,11 @@ try:
 except ImportError as exc:
     raise unittest.SkipTest(f"Qt GUI libraries unavailable: {exc}")
 
-from hmm_gesture_studio.device_history import DeviceHistory
-from hmm_gesture_studio.qt import i18n
-from hmm_gesture_studio.qt.controller import StudioController
-from hmm_gesture_studio.qt.theme import apply_theme
-from hmm_gesture_studio.qt.window import MainWindow
+from openzilo_gesture_studio.device_history import DeviceHistory
+from openzilo_gesture_studio.qt import i18n
+from openzilo_gesture_studio.qt.controller import StudioController
+from openzilo_gesture_studio.qt.theme import apply_theme
+from openzilo_gesture_studio.qt.window import MainWindow
 
 
 class LanguageTests(unittest.TestCase):
@@ -233,7 +233,7 @@ class WindowLanguageTests(unittest.TestCase):
 
     def test_native_confirmation_uses_selected_language(self):
         from PySide6.QtWidgets import QMessageBox
-        from hmm_gesture_studio.qt.dialogs import QtDialogs
+        from openzilo_gesture_studio.qt.dialogs import QtDialogs
         self.choose("en")
         def inspect(box):
             # macOS intentionally ignores QMessageBox window titles.

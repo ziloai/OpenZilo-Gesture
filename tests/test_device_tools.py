@@ -8,8 +8,8 @@ import unittest
 from unittest.mock import AsyncMock, Mock, patch
 
 import openzilo as sdk
-from hmm_gesture_studio.device import RingWorker, _StudioClient
-from hmm_gesture_studio.wire import AudioCommand
+from openzilo_gesture_studio.device import RingWorker, _StudioClient
+from openzilo_gesture_studio.wire import AudioCommand
 
 
 class DeviceToolsTests(unittest.IsolatedAsyncioTestCase):
@@ -89,7 +89,7 @@ class DeviceToolsTests(unittest.IsolatedAsyncioTestCase):
             self.worker.close()
 
     async def test_ota_rejects_external_recording_before_installing(self):
-        from hmm_gesture_studio import firmware
+        from openzilo_gesture_studio import firmware
         with patch.object(sdk, 'get_audio_recording_status', new_callable=AsyncMock,
                           return_value=SimpleNamespace(state=sdk.AudioRecordingState.CAPTURING)), \
              patch.object(firmware, 'install_firmware', new_callable=AsyncMock) as install:
@@ -98,7 +98,7 @@ class DeviceToolsTests(unittest.IsolatedAsyncioTestCase):
             install.assert_not_awaited()
 
     async def test_remote_recording_stop_event_and_save_callback_are_wired(self):
-        from hmm_gesture_studio import remote_audio
+        from openzilo_gesture_studio import remote_audio
         saved = self.stack.enter_context(patch.object(self.worker, '_save', new_callable=AsyncMock))
         async def record(ring, options, *, live, stop, emit, save, playback):
             self.assertTrue(live)

@@ -13,7 +13,7 @@ from unittest.mock import Mock, patch
 
 import openzilo as sdk
 
-from hmm_gesture_studio.playback import PcmPlayback
+from openzilo_gesture_studio.playback import PcmPlayback
 
 
 class FakeStream:
@@ -253,7 +253,7 @@ class PlaybackTests(unittest.TestCase):
         self.factory.assert_not_called()
 
     def test_thread_start_failure_is_contained(self):
-        with patch("hmm_gesture_studio.playback.threading.Thread.start",
+        with patch("openzilo_gesture_studio.playback.threading.Thread.start",
                    side_effect=RuntimeError("cannot start thread")):
             self.player.start(sdk.PcmConfig())
         self.assert_warning()
@@ -294,7 +294,7 @@ class PlaybackTests(unittest.TestCase):
     def test_module_import_is_headless_and_does_not_import_sounddevice(self):
         result = subprocess.run([
             sys.executable, "-c",
-            "import sys; import hmm_gesture_studio.playback; "
+            "import sys; import openzilo_gesture_studio.playback; "
             "assert 'sounddevice' not in sys.modules; "
             "assert 'tkinter' not in sys.modules",
         ], capture_output=True, text=True, timeout=10)

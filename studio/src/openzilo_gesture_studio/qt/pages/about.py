@@ -14,7 +14,7 @@ from ..i18n import tr
 from ..motion import Busy
 from ..widgets import Card, Page, StatTile, button, label, row, set_text, set_tone
 
-REPOSITORIES = (("OpenZilo-HMM", tr("手势识别与训练平台"), "https://github.com/ziloai/OpenZilo-HMM"),
+REPOSITORIES = (("OpenZilo-Gesture", tr("手势识别与训练平台"), "https://github.com/ziloai/OpenZilo-Gesture"),
                 ("OpenZilo", tr("戒指 SDK"), "https://github.com/ziloai/OpenZilo"))
 _TILE_WIDTH = _TILE_HEIGHT = theme.CONTRIBUTOR_TILE
 _AVATAR_SIZE = 64
@@ -142,7 +142,7 @@ class AboutPage(Page):
         self.fetcher = ContributorFetcher(self)
         top = self.add_section()
         self.header(top, tr("关于"), tr("OpenZilo 手势与录音工作室"))
-        self.app_version = StatTile(tr("应用版本"), package_version("hmm-gesture-studio"))
+        self.app_version = StatTile(tr("应用版本"), package_version("openzilo-gesture-studio"))
         self.sdk_version = StatTile("OpenZilo SDK", package_version("OpenZilo"))
         top.add(row(self.app_version, self.sdk_version, spacing=64))
 

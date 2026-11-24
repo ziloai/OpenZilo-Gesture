@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-"""Classify a recording using only the installed hmm-gesture runtime package.
+"""Classify a recording using only the installed openzilo-gesture runtime package.
 
 uv run --locked python examples/recognize_export.py --bundle exports/demo.gesture.json --input sample_data/向上.json
 """
@@ -9,7 +9,7 @@ import argparse
 import json
 from pathlib import Path
 
-from hmm_gesture import GestureRecognizer
+from openzilo_gesture import GestureRecognizer
 
 
 def main() -> None:

@@ -3,7 +3,7 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hmm-gesture"
+name = "openzilo-gesture"
 version = "0.2.0"
 description = "Portable six-axis IMU gesture recognition with exported HMM models"
 readme = "README.md"
@@ -23,4 +23,4 @@ members = ["studio"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-hmm_gesture = ["py.typed"]
+openzilo_gesture = ["py.typed"]

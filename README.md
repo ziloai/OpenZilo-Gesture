@@ -4,7 +4,7 @@
 
 <h1 align="center">OpenZilo Gesture Studio & Python Recognition</h1>
 
-<p align="center">Teach an OpenZilo ring your own gestures, then recognize them in your Python app.</p>
+<p align="center">Train HMM-based models for your own OpenZilo ring gestures and recognize them in Python.</p>
 
 <p align="center">
   <a href="README.zh-CN.md">中文</a> · <a href="#quick-start">Quick start</a> ·
@@ -20,26 +20,41 @@ Training and recognition run on your computer. Nothing is flashed or uploaded to
 
 | Package | What it does | Needs |
 | --- | --- | --- |
-| `hmm-gesture-studio` | Desktop app for connecting, recording, training and testing, plus ring audio and device tools | OpenZilo SDK, PySide6, Bluetooth |
-| `hmm-gesture` | Loads an exported model and recognizes gestures | NumPy, SciPy and hmmlearn only |
+| `openzilo-gesture-studio` | Desktop app for connecting, recording, training and testing, plus ring audio and device tools | OpenZilo SDK, PySide6, Bluetooth |
+| `openzilo-gesture` | Loads an exported model and recognizes gestures | NumPy, SciPy and hmmlearn only |
 
 ## Quick start
 
-You need [uv](https://docs.astral.sh/uv/getting-started/installation/), Git and a desktop session. Both packages support Python 3.10+.
+Both packages support Python 3.10+. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and use a desktop session to run Studio.
+
+### From PyPI
 
 ```bash
-git clone https://github.com/ziloai/OpenZilo-HMM.git
-cd OpenZilo-HMM
+uvx openzilo-gesture-studio
+uv add openzilo-gesture
+```
+
+The first command opens Studio. Run the second command in your own uv project to add the Python recognition package.
+
+### From source
+
+Clone the repository with Git:
+
+```bash
+git clone https://github.com/ziloai/OpenZilo-Gesture.git
+cd OpenZilo-Gesture
 uv sync --locked --all-packages
-uv run --locked --all-packages hmm-gesture-studio
+uv run --locked --all-packages openzilo-gesture-studio
 ```
 
 The Studio interface is in Chinese, so the steps below give each label with a translation.
 
-**No ring yet?** Train on the included sample data, which has six gestures with five repetitions each at 25 Hz:
+### Train with sample data
+
+You can train without a ring using `sample_data/` from the repository. It has six gestures with five repetitions each at 25 Hz:
 
 ```bash
-uv run --locked --package hmm-gesture-studio hmm-gesture-train --data sample_data --output exports/demo.gesture.json
+uv run --locked --package openzilo-gesture-studio openzilo-gesture-train --data sample_data --output exports/demo.gesture.json
 uv run --locked python examples/recognize_export.py --bundle exports/demo.gesture.json --input "sample_data/向上.json"
 ```
 
@@ -130,13 +145,13 @@ On the training page, click 导出模型包 (Export model) to save a `*.gesture.
 Add the recognition package to your project. It doesn't install Studio, Qt or the Bluetooth SDK:
 
 ```bash
-uv add /path/to/OpenZilo-HMM
+uv add /path/to/OpenZilo-Gesture
 ```
 
 Classify one complete gesture, where `samples` is an `(N, 6)` array:
 
 ```python
-from hmm_gesture import GestureRecognizer
+from openzilo_gesture import GestureRecognizer
 
 recognizer = GestureRecognizer.load("demo.gesture.json")
 print(recognizer.gesture_names, recognizer.sample_rate_hz)
@@ -174,8 +189,8 @@ recognizer.reset()  # after a reconnect or repositioning the ring
 
 ## Older tools
 
-- **Tkinter interface:** `uv run --locked --all-packages hmm-gesture-studio --ui legacy`. This requires a Python with Tkinter.
-- **Scripts:** `record_gesture.py`, `train_hmm.py` and `recognize.py` still work. They use `.pkl` models, which Studio and `hmm-gesture` don't import, so retrain from your JSON recordings to get a `*.gesture.json`. **Only load pickle files you trust**, because loading one can run code. `record_gesture.py` overwrites recordings with the same name.
+- **Tkinter interface:** `uv run --locked --all-packages openzilo-gesture-studio --ui legacy`. This requires a Python with Tkinter.
+- **Scripts:** `record_gesture.py`, `train_hmm.py` and `recognize.py` still work. They use `.pkl` models, which Studio and `openzilo-gesture` don't import, so retrain from your JSON recordings to get a `*.gesture.json`. **Only load pickle files you trust**, because loading one can run code. `record_gesture.py` overwrites recordings with the same name.
 
 ## Development
 
@@ -184,7 +199,7 @@ uv run --locked --all-packages python -m unittest discover -s tests -v
 uv build --all-packages --wheel
 ```
 
-Commit `uv.lock` along with any dependency change. Tests don't use real Bluetooth hardware, so check device behavior on a real ring. Report problems in [GitHub Issues](https://github.com/ziloai/OpenZilo-HMM/issues).
+Commit `uv.lock` along with any dependency change. Tests don't use real Bluetooth hardware, so check device behavior on a real ring. Report problems in [GitHub Issues](https://github.com/ziloai/OpenZilo-Gesture/issues).
 
 ## License
 

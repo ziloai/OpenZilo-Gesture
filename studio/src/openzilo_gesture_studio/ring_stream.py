@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 
 import openzilo as sdk
 
-from hmm_gesture_studio.wire import ErrorCode
+from openzilo_gesture_studio.wire import ErrorCode
 
 
 @asynccontextmanager

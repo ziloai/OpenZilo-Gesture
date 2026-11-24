@@ -13,7 +13,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import openzilo as sdk
 
-from hmm_gesture_studio import calibration
+from openzilo_gesture_studio import calibration
 
 
 DEVICE = "synthetic-ring"

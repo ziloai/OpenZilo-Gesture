@@ -9,11 +9,11 @@ import unittest
 from hmmlearn.hmm import GaussianHMM
 import numpy as np
 
-from hmm_gesture import (
+from openzilo_gesture import (
     GestureBundle, GestureRecognizer, PipelineConfig, RejectionCalibration, SegmentationConfig,
 )
-from hmm_gesture.preprocessing import SignalFilter
-from hmm_gesture.segmentation import MotionSegmenter, prepare_recording
+from openzilo_gesture.preprocessing import SignalFilter
+from openzilo_gesture.segmentation import MotionSegmenter, prepare_recording
 
 
 def snap_stream(peaks=(50, 160), length=240, amplitude=15000):

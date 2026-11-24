@@ -1,6 +1,8 @@
 name: Tests
 
 on:
+  pull_request:
+  workflow_call:
   push:
     tags:
       - '**'
@@ -43,6 +45,6 @@ jobs:
       - name: Verify runtime-only dependency boundary
         run: |
           uv sync --locked --python ${{ matrix.python }}
-          uv run --locked --python ${{ matrix.python }} python -c "import importlib.util; import hmm_gesture; assert importlib.util.find_spec('hmm_gesture_studio') is None; assert importlib.util.find_spec('openzilo') is None"
+          uv run --locked --python ${{ matrix.python }} python -c "import importlib.util; import openzilo_gesture; assert importlib.util.find_spec('openzilo_gesture_studio') is None; assert importlib.util.find_spec('openzilo') is None"
       - name: Build independent runtime and Studio wheels
         run: uv build --all-packages --wheel --out-dir dist --python ${{ matrix.python }}

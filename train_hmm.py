@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MPL-2.0
-"""Legacy pickle-training CLI. New integrations should use hmm-gesture-train.
+"""Legacy pickle-training CLI. New integrations should use openzilo-gesture-train.
 
-The algorithm lives in hmm_gesture_studio.training; this entry point only
+The algorithm lives in openzilo_gesture_studio.training; this entry point only
 preserves the original per-gesture .pkl output format for existing users.
 """
 from __future__ import annotations
@@ -10,8 +10,8 @@ import argparse
 import pickle
 from pathlib import Path
 
-from hmm_gesture.preprocessing import FeatureExtractor, SignalFilter
-from hmm_gesture_studio.training import build_left_right_hmm, load_gesture_data, train_gesture
+from openzilo_gesture.preprocessing import FeatureExtractor, SignalFilter
+from openzilo_gesture_studio.training import build_left_right_hmm, load_gesture_data, train_gesture
 
 
 def main():

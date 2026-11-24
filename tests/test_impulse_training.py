@@ -19,11 +19,11 @@ from unittest.mock import patch
 
 import numpy as np
 
-from hmm_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig
-from hmm_gesture.preprocessing import make_pipeline
-from hmm_gesture.segmentation import impulse_peak, prepare_recording
-from hmm_gesture_studio import evaluation, training
-from hmm_gesture_studio.datasets import GestureDataset, save_dataset
+from openzilo_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig
+from openzilo_gesture.preprocessing import make_pipeline
+from openzilo_gesture.segmentation import impulse_peak, prepare_recording
+from openzilo_gesture_studio import evaluation, training
+from openzilo_gesture_studio.datasets import GestureDataset, save_dataset
 
 
 def impulse_take(marker=10, *, amplitude=18000, onset=70, length=180):

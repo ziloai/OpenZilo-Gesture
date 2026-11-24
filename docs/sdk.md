@@ -4,7 +4,7 @@
 
 ## Dependency / 依赖
 
-Studio uses official **OpenZilo 0.6.2**, pinned to [`37928a8a65a4ca98be8b8d2be3300ad7f624004e`](https://github.com/ziloai/OpenZilo/commit/37928a8a65a4ca98be8b8d2be3300ad7f624004e) with the `pcm` extra. Only this SDK revision is supported; there is no older-SDK compatibility layer. The SDK supplies Bleak, cryptography and PyAV. `hmm-gesture` remains independent of BLE, SDK, Qt, Tk and audio dependencies.
+Studio installs the official SDK from PyPI with `openzilo[pcm]>=0.6.3,<0.7`. The SDK supplies Bleak, cryptography and PyAV. `openzilo-gesture` only needs NumPy, SciPy and hmmlearn.
 
 Studio 固定上述提交及 `pcm` extra，只适配新版 SDK。PyAV 用于进程内实时 PCM 解码；签名固件验证使用 SDK 的 cryptography 依赖。独立识别包仍不依赖这些组件。
 
@@ -23,12 +23,12 @@ Python 3.10+, Git, a Tk-enabled Python and BLE permissions are required for Stud
 
 Use revision-linked upstream sources instead of copying the protocol implementation:
 
-- [Public API](https://github.com/ziloai/OpenZilo/blob/37928a8a65a4ca98be8b8d2be3300ad7f624004e/src/openzilo/__init__.py)
-- [Firmware migration](https://github.com/ziloai/OpenZilo/blob/37928a8a65a4ca98be8b8d2be3300ad7f624004e/docs/sdk-migration.zh-CN.md)
-- [IMU and local calibration](https://github.com/ziloai/OpenZilo/blob/37928a8a65a4ca98be8b8d2be3300ad7f624004e/docs/sdk-imu.zh-CN.md)
-- [Remote recording](https://github.com/ziloai/OpenZilo/blob/37928a8a65a4ca98be8b8d2be3300ad7f624004e/docs/recording-control.zh-CN.md)
-- [Live audio](https://github.com/ziloai/OpenZilo/blob/37928a8a65a4ca98be8b8d2be3300ad7f624004e/docs/sdk-live-audio.zh-CN.md)
-- [Signed OTA](https://github.com/ziloai/OpenZilo/blob/37928a8a65a4ca98be8b8d2be3300ad7f624004e/docs/sdk-ota.zh-CN.md)
+- [Public API](https://github.com/ziloai/OpenZilo/blob/v0.6.3/src/openzilo/__init__.py)
+- [Firmware migration](https://github.com/ziloai/OpenZilo/blob/v0.6.3/docs/sdk-migration.zh-CN.md)
+- [IMU and local calibration](https://github.com/ziloai/OpenZilo/blob/v0.6.3/docs/sdk-imu.zh-CN.md)
+- [Remote recording](https://github.com/ziloai/OpenZilo/blob/v0.6.3/docs/recording-control.zh-CN.md)
+- [Live audio](https://github.com/ziloai/OpenZilo/blob/v0.6.3/docs/sdk-live-audio.zh-CN.md)
+- [Signed OTA](https://github.com/ziloai/OpenZilo/blob/v0.6.3/docs/sdk-ota.zh-CN.md)
 
 The enhanced firmware baseline is **V2.001.0002.0001**. Query capabilities on every connection; a version label alone does not prove a feature is available. Unsupported/unknown contracts are rejected rather than force-enabled. SDK version and firmware version are independent.
 
@@ -54,7 +54,7 @@ asyncio.run(main())
 
 ## Ownership and recovery / 独占与恢复
 
-Studio has one BLE owner thread. SDK 0.6.2 owns fragmented-write and per-response request locks; Studio must not reacquire the same write lock around `super().send_command()`. The thin client observer tracks extraction indices using network byte order and completes in-flight writes before cancelling. Studio still uses the pinned client's private receive queues for bounded queue housekeeping; only a few wire IDs are local constants, not private SDK imports or a copied protocol implementation.
+Studio has one BLE owner thread. The SDK owns fragmented-write and per-response request locks. Studio must not reacquire the same write lock around `super().send_command()`. The thin client observer tracks extraction indices using network byte order and completes in-flight writes before cancelling. Studio uses the SDK client's private receive queues for bounded queue housekeeping and keeps a few wire IDs as local constants.
 
 Audio operations run alongside the IMU consumer and do not stop, resubscribe or drain the IMU stream. The IMU owner pauses only before maintenance (calibration, diagnostics and OTA), then restarts with a fresh segment. Calibration owns its own IMU stream and never emits model-input `samples`. OTA owns the entire connection, including reboot/reconnect; normal housekeeping must not interpret its expected reboot as link failure. In-flight battery requests finish before maintenance starts; new telemetry is deferred. An OTA attempt ends the Studio session without automatic retry; reconnect explicitly after checking the result.
 
@@ -71,7 +71,7 @@ Audio operations run alongside the IMU consumer and do not stop, resubscribe or 
 
 ## macOS OTA connection tuning / macOS OTA 连接调优
 
-Before each OTA attempt, after exclusive worker preparation, Studio makes a best-effort low-latency request on the **existing** CoreBluetooth connection. The adapter in `studio/src/hmm_gesture_studio/_ble_connection.py` accesses the pinned SDK/Bleak backend and calls the private central-manager selector `setDesiredConnectionLatency:forPeripheral:` with `0`. The tested macOS runtime identifies this value as `low`; it is not an interval in milliseconds. There is no second BLE connection, delegate replacement, or change to SDK packet sizes, signature checks, or reboot/version verification.
+Before each OTA attempt, after exclusive worker preparation, Studio makes a best-effort low-latency request on the **existing** CoreBluetooth connection. The adapter in `studio/src/openzilo_gesture_studio/_ble_connection.py` accesses the pinned SDK/Bleak backend and calls the private central-manager selector `setDesiredConnectionLatency:forPeripheral:` with `0`. The tested macOS runtime identifies this value as `low`; it is not an interval in milliseconds. There is no second BLE connection, delegate replacement, or change to SDK packet sizes, signature checks, or reboot/version verification.
 
 Non-macOS platforms skip the request. Missing backend support or a native exception produces a UI status/log message and leaves the original SDK upgrade path available. A returned native call means **request submitted**, not that negotiation succeeded. Studio neither invents negotiated values nor waits a fixed duration to claim success. Actual interval, peripheral latency and supervision timeout remain system-controlled; system upgrades may change this private API. The OTA attempt still ends the Studio session, and a later attempt requests tuning again. No previous parameter values are guessed/restored and no persistent device configuration is written.
 

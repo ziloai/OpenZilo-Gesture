@@ -12,12 +12,12 @@ import unittest
 from unittest.mock import Mock, patch
 
 import numpy as np
-from hmm_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig, RejectionCalibration
-from hmm_gesture_studio import gui
-from hmm_gesture_studio.datasets import GestureDataset, dataset_path, load_dataset, save_dataset
-from hmm_gesture_studio.training import train_datasets
-from hmm_gesture_studio.device_history import DeviceHistory
-from hmm_gesture_studio.sdk_controls import SDKControls
+from openzilo_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig, RejectionCalibration
+from openzilo_gesture_studio import gui
+from openzilo_gesture_studio.datasets import GestureDataset, dataset_path, load_dataset, save_dataset
+from openzilo_gesture_studio.training import train_datasets
+from openzilo_gesture_studio.device_history import DeviceHistory
+from openzilo_gesture_studio.sdk_controls import SDKControls
 
 
 class Var:
@@ -1048,7 +1048,7 @@ class GuiControllerTests(unittest.TestCase):
                                     training_regions=dataset.training_regions)
         original = path.read_bytes()
         revision = self.app.revision
-        with patch("hmm_gesture_studio.datasets.save_dataset_file", side_effect=OSError("read only")):
+        with patch("openzilo_gesture_studio.datasets.save_dataset_file", side_effect=OSError("read only")):
             self.app.set_preview_training_region((2, 30))
         self.app.error.assert_called_once_with("read only")
         self.assertEqual(path.read_bytes(), original)

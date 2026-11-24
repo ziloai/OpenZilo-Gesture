@@ -18,7 +18,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 import openzilo as sdk
 
-from hmm_gesture_studio import firmware
+from openzilo_gesture_studio import firmware
 
 
 def signed_bundle(key, profile="production"):

@@ -29,8 +29,8 @@ import numpy as np
 import openzilo as sdk
 
 from ring_stream import open_ring_stream
-from hmm_gesture.preprocessing import validate_samples
-from hmm_gesture_studio.datasets import GestureDataset, save_dataset
+from openzilo_gesture.preprocessing import validate_samples
+from openzilo_gesture_studio.datasets import GestureDataset, save_dataset
 
 # Two feature windows with the default window_size=8, overlap=4.
 MIN_RECORDING_SAMPLES = 12

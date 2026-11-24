@@ -16,10 +16,10 @@ from unittest.mock import AsyncMock, patch
 
 import openzilo as sdk
 
-from hmm_gesture_studio import device
-from hmm_gesture_studio.device import RingWorker, _StudioClient
-from hmm_gesture_studio.ring_stream import open_ring_stream
-from hmm_gesture_studio.wire import AudioCommand, ErrorCode, SensorCommand
+from openzilo_gesture_studio import device
+from openzilo_gesture_studio.device import RingWorker, _StudioClient
+from openzilo_gesture_studio.ring_stream import open_ring_stream
+from openzilo_gesture_studio.wire import AudioCommand, ErrorCode, SensorCommand
 
 
 class WorkerTests(unittest.TestCase):
@@ -528,7 +528,7 @@ class WorkerTests(unittest.TestCase):
         self.assertIsNone(self.worker._audio_directory)
 
     def test_remote_and_live_recording_keep_imu_continuous_through_save(self):
-        from hmm_gesture_studio import remote_audio
+        from openzilo_gesture_studio import remote_audio
 
         self.streaming()
         sequence = 0
@@ -583,7 +583,7 @@ class WorkerTests(unittest.TestCase):
                          ["waiting", "active"])
 
     def test_recording_error_ends_only_audio_not_imu(self):
-        from hmm_gesture_studio import remote_audio
+        from openzilo_gesture_studio import remote_audio
 
         self.streaming()
         for i, live in enumerate((False, True), 1):
@@ -601,7 +601,7 @@ class WorkerTests(unittest.TestCase):
         self.save.assert_not_called()
 
     def test_cancel_recording_keeps_imu_while_waiting_for_audio_cleanup(self):
-        from hmm_gesture_studio import remote_audio
+        from openzilo_gesture_studio import remote_audio
 
         self.streaming()
         started = threading.Event()
@@ -942,7 +942,7 @@ class WorkerTests(unittest.TestCase):
         self.assertIsNone(self.worker._audio_pending)
 
     def test_decoder_failure_preserves_raw_and_connection(self):
-        from hmm_gesture_studio.audio import save_recording
+        from openzilo_gesture_studio.audio import save_recording
         self.save.side_effect = save_recording
         self.stack.enter_context(patch.object(sdk, "decode_audio_to_wav", side_effect=sdk.SpeexDecoderUnavailable("ffmpeg missing")))
         with tempfile.TemporaryDirectory() as directory:
@@ -1271,30 +1271,30 @@ class StreamTests(unittest.IsolatedAsyncioTestCase):
                 self.order.append("disconnect")
                 self.ring.is_connected = False
         self.stack.enter_context(patch(
-            "hmm_gesture_studio.ring_stream.sdk.OpenZiloClient", side_effect=client,
+            "openzilo_gesture_studio.ring_stream.sdk.OpenZiloClient", side_effect=client,
         ))
         self.info = self.stack.enter_context(patch(
-            "hmm_gesture_studio.ring_stream.sdk.get_system_info", new_callable=AsyncMock,
+            "openzilo_gesture_studio.ring_stream.sdk.get_system_info", new_callable=AsyncMock,
             return_value=SimpleNamespace(model="ring", firmware_version="1", battery_percent=90),
         ))
         async def capabilities(ring):
             self.info.assert_awaited_once_with(ring)
             self.order.append("capabilities")
         self.capabilities = self.stack.enter_context(patch(
-            "hmm_gesture_studio.ring_stream.sdk.get_device_capabilities", side_effect=capabilities,
+            "openzilo_gesture_studio.ring_stream.sdk.get_device_capabilities", side_effect=capabilities,
         ))
         async def start(ring):
             self.capabilities.assert_awaited_once_with(ring)
             self.order.append("start")
             return self.start.return_value
         self.start = self.stack.enter_context(patch(
-            "hmm_gesture_studio.ring_stream.sdk.start_sensor_report", side_effect=start,
+            "openzilo_gesture_studio.ring_stream.sdk.start_sensor_report", side_effect=start,
             return_value=sdk.SensorStartInfo(25, 8, 2000),
         ))
         async def stop(ring):
             self.order.append("stop")
         self.stop = self.stack.enter_context(patch(
-            "hmm_gesture_studio.ring_stream.sdk.stop_sensor_report", side_effect=stop,
+            "openzilo_gesture_studio.ring_stream.sdk.stop_sensor_report", side_effect=stop,
         ))
         self.status = []
 

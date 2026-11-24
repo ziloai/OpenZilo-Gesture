@@ -10,15 +10,15 @@
 
 ```bash
 uv sync --locked --all-packages
-uv run --locked --all-packages hmm-gesture-studio
-# 或 uv run --locked --package hmm-gesture-studio python -m hmm_gesture_studio
+uv run --locked --all-packages openzilo-gesture-studio
+# 或 uv run --locked --package openzilo-gesture-studio python -m openzilo_gesture_studio
 
 # 启动旧界面（需要带 Tkinter 的 Python）
-uv run --locked --all-packages hmm-gesture-studio --ui legacy
-# 或 uv run --locked --all-packages hmm-gesture-studio-legacy
+uv run --locked --all-packages openzilo-gesture-studio --ui legacy
+# 或 uv run --locked --all-packages openzilo-gesture-studio-legacy
 ```
 
-工作区共用根目录的 `uv.lock` 和 `.venv/`，默认开发解释器为 Python 3.12，无需手动激活环境。在 `studio/` 目录内也可直接运行 `uv run --locked hmm-gesture-studio`，但默认数据目录相对于当前工作目录。
+工作区共用根目录的 `uv.lock` 和 `.venv/`，默认开发解释器为 Python 3.12，无需手动激活环境。在 `studio/` 目录内也可直接运行 `uv run --locked openzilo-gesture-studio`，但默认数据目录相对于当前工作目录。
 
 新界面的 PySide6 和 pyqtgraph 由 uv 安装。Linux 若提示缺少系统库，请执行 `sudo apt install libegl1 libgl1 libxkbcommon0 libdbus-1-3`。
 
@@ -111,7 +111,7 @@ uv run --locked --all-packages hmm-gesture-studio --ui legacy
 
 远程和实时录音断线策略为 STOP。文件传输进度不是录音时长；只有有效 WAV 才显示时长。下载文件先保留原始 `.bin` 再转换 WAV；Opus 单/双声道由 SDK 自动识别。文件解码需要系统 ffmpeg（macOS `brew install ffmpeg`，Ubuntu/Debian `sudo apt install ffmpeg`，Windows 加入 PATH）；失败保留原始文件。
 
-设备历史保存在用户配置目录的 `hmm-gesture-studio/devices.json`：macOS 为 `~/Library/Application Support/`，Windows 为 `%APPDATA%`，Linux 为 `$XDG_CONFIG_HOME`（默认 `~/.config`）。仅记录成功连接的地址、名称和最近连接时间，不上传；文件损坏或无法写入不影响连接。
+设备历史继续保存在用户配置目录的 `hmm-gesture-studio/devices.json`，改名前已保存的戒指可直接读取。macOS 为 `~/Library/Application Support/`，Windows 为 `%APPDATA%`，Linux 为 `$XDG_CONFIG_HOME`（默认 `~/.config`）。仅记录成功连接的地址、名称和最近连接时间，不上传；文件损坏或无法写入不影响连接。
 
 请在目标戒指上验证订阅、远程开始/停止、长按/松开保存、实时 END、下载与重连；自动测试不代表真机实测。
 
@@ -164,7 +164,7 @@ uv run --locked --all-packages hmm-gesture-studio --ui legacy
 点击“留出评估”可在后台验证，每类至少 4 次有效录制：外层每轮留出一次，其余录制再用于训练与内层拒识标定；测试数据不进入归一化、门限或拟合。单类只报告**正样本通过率**，不是完整识别准确率，更不能代表误触率。日志给出各类预测分布和过短录制数。评估不替换当前模型，也不会在每次训练时自动运行；还需独立的连续数据与负样本测试。
 
 ```bash
-uv run --locked --package hmm-gesture-studio python -m hmm_gesture_studio.evaluation --data sample_data
+uv run --locked --package openzilo-gesture-studio python -m openzilo_gesture_studio.evaluation --data sample_data
 ```
 
 此前针对仓库 25 Hz 示例、默认旧式分段/滤波参数且未开启拒识的 5 折比较：旧流程 **19/30（63.3%）**，仅加数值正则化为 **20/30（66.7%）**；提升有限，“向下”“向右”仍有明显混淆。这不是新响指预设或拒识效果的评测。此结果用于开发验证，不代表真实佩戴场景准确率，也不是调参后的独立测试集。建议每个手势录制至少 5–10 次，保持佩戴方向、采样率一致，并另录独立会话测试。录制前后留少量静止、每次只做一个动作；结合滤波预览排查噪声、动作差异及过长的等待片段。
@@ -172,19 +172,19 @@ uv run --locked --package hmm-gesture-studio python -m hmm_gesture_studio.evalua
 ## 无 GUI 训练
 
 ```bash
-uv run --locked --package hmm-gesture-studio hmm-gesture-train --data sample_data --output exports/demo.gesture.json
+uv run --locked --package openzilo-gesture-studio openzilo-gesture-train --data sample_data --output exports/demo.gesture.json
 ```
 
 这会训练仓库六类示例数据。只验证流程，不是独立准确率评测。旧 `*.pkl` 不会直接导入；请用录制 JSON 重新训练导出，避免 pickle 的执行风险和缺少预处理参数的问题。
 
-导出后，使用端只需识别包：在仓库根目录用 `uv sync --locked` 仅同步 `hmm-gesture`，或在其他 uv 应用中用 `uv add /path/to/OpenZilo-HMM` 添加依赖。无需此平台、Tkinter 或 OpenZilo SDK：
+导出后，使用端只需识别包：在仓库根目录用 `uv sync --locked` 仅同步 `openzilo-gesture`，或在其他 uv 应用中用 `uv add /path/to/OpenZilo-Gesture` 添加依赖。无需此平台、Tkinter 或 OpenZilo SDK：
 
 ```python
-from hmm_gesture import GestureRecognizer
+from openzilo_gesture import GestureRecognizer
 recognizer = GestureRecognizer.load("exports/demo.gesture.json")
 result = recognizer.predict(samples, sample_rate_hz=25)  # (N, 6) 原始值
 for result in recognizer.feed(batch, sample_rate_hz=25):
     print(result.name, result.confidence)
 ```
 
-项目采用 MPL-2.0。SDK 固定为 OpenZilo 0.6.2（`pcm` extra）的提交 `37928a8a65a4ca98be8b8d2be3300ad7f624004e`；只支持新版 SDK，不保留旧 SDK 适配层。本平台不向戒指上传模型；训练与推理均在电脑端运行。
+项目采用 MPL-2.0。Studio 从 PyPI 安装 `openzilo[pcm]>=0.6.3,<0.7`。训练与推理均在电脑端运行。

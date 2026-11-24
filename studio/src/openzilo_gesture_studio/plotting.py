@@ -431,8 +431,8 @@ class RecordingPlot:
 
     def show_recording(self, samples, pipeline, *, segmentation=None, training_region=None):
         import numpy as np
-        from hmm_gesture.preprocessing import make_pipeline, validate_samples
-        from hmm_gesture.segmentation import MotionSegmenter, impulse_peak, prepare_recording
+        from openzilo_gesture.preprocessing import make_pipeline, validate_samples
+        from openzilo_gesture.segmentation import MotionSegmenter, impulse_peak, prepare_recording
         from .datasets import validate_training_region
 
         self._cancel_drag()  # A switch/reload must never finish an earlier recording's drag.

@@ -18,7 +18,7 @@ import openzilo as sdk
 import recognize
 import record_gesture
 from ring_stream import open_ring_stream
-from hmm_gesture_studio.wire import ErrorCode
+from openzilo_gesture_studio.wire import ErrorCode
 
 
 def batch(value: int, count: int = 12) -> sdk.SensorDataBatch:

@@ -27,7 +27,7 @@ class Studio:
         # Keep optional desktop dependencies out of the inference package.
         global PipelineConfig, SegmentationConfig, GestureRecognizer, GestureBundle
         global GestureDataset, load_dataset, save_dataset, dataset_path, train_datasets
-        from hmm_gesture import (
+        from openzilo_gesture import (
             PipelineConfig, SegmentationConfig, GestureRecognizer, GestureBundle,
         )
         from .datasets import GestureDataset, load_dataset, save_dataset, dataset_path

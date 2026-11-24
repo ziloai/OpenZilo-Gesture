@@ -9,13 +9,13 @@ import unittest
 from unittest.mock import Mock, patch
 
 import numpy as np
-from hmm_gesture import GestureBundle
+from openzilo_gesture import GestureBundle
 
-from hmm_gesture_studio.datasets import GestureDataset, dataset_path, load_dataset, save_dataset
-from hmm_gesture_studio.device_history import DeviceHistory
-from hmm_gesture_studio.firmware import VerifiedFirmware
-from hmm_gesture_studio.qt.controller import StudioController
-from hmm_gesture_studio.qt.models import (
+from openzilo_gesture_studio.datasets import GestureDataset, dataset_path, load_dataset, save_dataset
+from openzilo_gesture_studio.device_history import DeviceHistory
+from openzilo_gesture_studio.firmware import VerifiedFirmware
+from openzilo_gesture_studio.qt.controller import StudioController
+from openzilo_gesture_studio.qt.models import (
     AccelerationModel, LiveStreamModel, analyze_recording, drag_to_region,
 )
 
@@ -25,7 +25,7 @@ ADDRESS = "AA:BB:CC:DD:EE:01"
 
 
 def setUpModule():
-    from hmm_gesture_studio.qt.i18n import language_manager
+    from openzilo_gesture_studio.qt.i18n import language_manager
     previous = language_manager.preference
     language_manager.set_preference("zh", persist=False)
     unittest.addModuleCleanup(language_manager.set_preference, previous, persist=False)
@@ -873,7 +873,7 @@ class ModelsTests(unittest.TestCase):
         self.assertIsNone(model.snapshot()[2])
 
     def test_analysis_never_modifies_raw_and_reports_impulse_failure(self):
-        from hmm_gesture import PipelineConfig, SegmentationConfig
+        from openzilo_gesture import PipelineConfig, SegmentationConfig
         pipeline = PipelineConfig(sample_rate_hz=100.0, cutoff_hz=30.0, median_kernel=1)
         segmentation = SegmentationConfig.for_sample_rate(100.0, mode="impulse", energy_threshold=8000.0,
                                                           min_samples=pipeline.min_samples)

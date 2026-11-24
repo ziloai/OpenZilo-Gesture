@@ -12,11 +12,11 @@ from unittest.mock import patch
 
 import numpy as np
 
-from hmm_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig, RejectionCalibration
-from hmm_gesture.preprocessing import FeatureExtractor, SignalFilter
-from hmm_gesture.segmentation import MotionSegmenter
-from hmm_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
-from hmm_gesture_studio.training import train_datasets
+from openzilo_gesture import GestureBundle, GestureRecognizer, PipelineConfig, SegmentationConfig, RejectionCalibration
+from openzilo_gesture.preprocessing import FeatureExtractor, SignalFilter
+from openzilo_gesture.segmentation import MotionSegmenter
+from openzilo_gesture_studio.datasets import GestureDataset, load_dataset, save_dataset
+from openzilo_gesture_studio.training import train_datasets
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,6 +43,7 @@ class ExportTests(unittest.TestCase):
     def test_export_load_preserves_predictions_and_all_settings(self):
         with tempfile.TemporaryDirectory() as folder:
             path = self.bundle.save(Path(folder) / "nested" / "export.gesture.json")
+            self.assertEqual(json.loads(path.read_text(encoding="utf-8"))["format"], "hmm-gesture")
             with patch("pickle.load", side_effect=AssertionError("must not deserialize pickle")):
                 loaded = GestureRecognizer.load(path)
             self.assertEqual(loaded.bundle.pipeline, self.config)
@@ -97,7 +98,7 @@ class ExportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             path = self.bundle.save(Path(folder) / "export.json")
             original = path.read_bytes()
-            with patch("hmm_gesture.bundle.os.replace", side_effect=OSError("disk error")):
+            with patch("openzilo_gesture.bundle.os.replace", side_effect=OSError("disk error")):
                 with self.assertRaises(OSError):
                     self.bundle.save(path)
             self.assertEqual(path.read_bytes(), original)
@@ -110,10 +111,10 @@ class ExportTests(unittest.TestCase):
 import importlib.abc, sys
 class Block(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, *args):
-        if fullname.split('.')[0] in {'openzilo','bleak','tkinter','hmm_gesture_studio'}:
+        if fullname.split('.')[0] in {'openzilo','bleak','tkinter','openzilo_gesture_studio'}:
             raise AssertionError('runtime imported '+fullname)
 sys.meta_path.insert(0, Block())
-from hmm_gesture import GestureRecognizer
+from openzilo_gesture import GestureRecognizer
 recognizer = GestureRecognizer.load(sys.argv[1])
 assert recognizer.predict([[1,2,3,4,5,6]]*24) is not None
 print(recognizer.gesture_names)
@@ -238,7 +239,7 @@ class DatasetTrainingTests(unittest.TestCase):
         short = GestureDataset("短", [np.ones((11, 6))] * 2)
         for datasets in ([], [short], [good, good], [good, recordings("rate", rate=50)]):
             with self.subTest(names=[d.name for d in datasets]):
-                with patch("hmm_gesture_studio.training._fit_gesture") as fit:
+                with patch("openzilo_gesture_studio.training._fit_gesture") as fit:
                     with self.assertRaises(ValueError):
                         train_datasets(datasets, PipelineConfig())
                     fit.assert_not_called()
@@ -254,7 +255,7 @@ class DatasetTrainingTests(unittest.TestCase):
     def test_new_cli_and_all_shipped_data(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "demo.gesture.json"
-            result = subprocess.run([sys.executable, "-m", "hmm_gesture_studio.training",
+            result = subprocess.run([sys.executable, "-m", "openzilo_gesture_studio.training",
                                      "--data", str(ROOT / "sample_data"), "--output", str(path)],
                                     cwd=folder, capture_output=True, text=True, timeout=60)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)

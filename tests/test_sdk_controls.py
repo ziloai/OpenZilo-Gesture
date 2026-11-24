@@ -11,8 +11,8 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
-from hmm_gesture_studio.gui import Studio
-from hmm_gesture_studio.sdk_controls import SDKControls, recording_options
+from openzilo_gesture_studio.gui import Studio
+from openzilo_gesture_studio.sdk_controls import SDKControls, recording_options
 
 
 class Var:
@@ -111,7 +111,7 @@ class SDKControlsTests(unittest.TestCase):
 
     def test_imports_do_not_import_tk_or_initialize_hardware(self):
         result = subprocess.run([sys.executable, "-c", "import sys; "
-            "import hmm_gesture_studio.gui, hmm_gesture_studio.sdk_controls; "
+            "import openzilo_gesture_studio.gui, openzilo_gesture_studio.sdk_controls; "
             "assert 'tkinter' not in sys.modules; assert 'openzilo' not in sys.modules"], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
@@ -357,7 +357,7 @@ class SDKControlsTests(unittest.TestCase):
         self.app.connected = False
         verified = Verified()
         service = SimpleNamespace(inspect_bundle=Mock(return_value=verified))
-        with patch.dict(sys.modules, {"hmm_gesture_studio.firmware": service}):
+        with patch.dict(sys.modules, {"openzilo_gesture_studio.firmware": service}):
             self.ui.inspect_firmware()
             self.assertTrue(self.ui.inspection_pending)
             self.assertIsNone(self.ui.verified)
@@ -385,7 +385,7 @@ class SDKControlsTests(unittest.TestCase):
 
     def test_inspection_worker_failure_is_delivered_on_main_thread(self):
         service = SimpleNamespace(inspect_bundle=Mock(side_effect=ValueError("bad signature")))
-        with patch.dict(sys.modules, {"hmm_gesture_studio.firmware": service}):
+        with patch.dict(sys.modules, {"openzilo_gesture_studio.firmware": service}):
             self.ui.inspect_firmware()
             self.app.executor.submit.call_args.args[0]()
         self.app.error.assert_not_called()

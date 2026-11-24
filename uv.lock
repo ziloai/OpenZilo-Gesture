@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -9,8 +9,8 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "hmm-gesture",
-    "hmm-gesture-studio",
+    "openzilo-gesture",
+    "openzilo-gesture-studio",
 ]
 
 [[package]]
@@ -456,48 +456,6 @@ wheels = [
 ]
 
 [[package]]
-name = "hmm-gesture"
-version = "0.2.0"
-source = { editable = "." }
-dependencies = [
-    { name = "hmmlearn" },
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
-    { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
-    { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "hmmlearn", specifier = ">=0.3.3,<0.4" },
-    { name = "numpy", specifier = ">=1.24,<3" },
-    { name = "scipy", specifier = ">=1.10,<2" },
-]
-
-[[package]]
-name = "hmm-gesture-studio"
-version = "0.2.0"
-source = { editable = "studio" }
-dependencies = [
-    { name = "hmm-gesture" },
-    { name = "openzilo", extra = ["pcm"] },
-    { name = "pyqtgraph" },
-    { name = "pyside6-essentials" },
-    { name = "sounddevice" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "hmm-gesture", editable = "." },
-    { name = "openzilo", extras = ["pcm"], git = "https://github.com/ziloai/OpenZilo.git?rev=37928a8a65a4ca98be8b8d2be3300ad7f624004e" },
-    { name = "pyqtgraph", specifier = ">=0.13.7,<0.15" },
-    { name = "pyside6-essentials", specifier = ">=6.9,<6.12" },
-    { name = "sounddevice", specifier = ">=0.5,<0.6" },
-]
-
-[[package]]
 name = "hmmlearn"
 version = "0.3.3"
 source = { registry = "https://pypi.org/simple" }
@@ -781,11 +739,15 @@ wheels = [
 
 [[package]]
 name = "openzilo"
-version = "0.6.2"
-source = { git = "https://github.com/ziloai/OpenZilo.git?rev=37928a8a65a4ca98be8b8d2be3300ad7f624004e#37928a8a65a4ca98be8b8d2be3300ad7f624004e" }
+version = "0.6.3"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bleak" },
     { name = "cryptography" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/40/d5/5265dfc77c3b55c442deb6fcb6d8598bc507fc079bc037c6ac2da6e57dcc/openzilo-0.6.3.tar.gz", hash = "sha256:bc9fc1ffe93a8ae638c08c993609042964e43f54354953e984fde49c61620f3f", size = 104327, upload-time = "2026-11-23T10:47:39.982Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/db/08/25806ee886c69489641e212a5031209732530b3b790a337449f59788ead8/openzilo-0.6.3-py3-none-any.whl", hash = "sha256:a329b70af467644258b3b97915a4400e8416479d8df6d59ad369ed5dbf723d25", size = 82103, upload-time = "2026-11-23T10:47:38.666Z" },
 ]
 
 [package.optional-dependencies]
@@ -793,6 +755,48 @@ pcm = [
     { name = "av", version = "17.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "av", version = "18.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
     { name = "av", version = "19.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+]
+
+[[package]]
+name = "openzilo-gesture"
+version = "0.2.0"
+source = { editable = "." }
+dependencies = [
+    { name = "hmmlearn" },
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "hmmlearn", specifier = ">=0.3.3,<0.4" },
+    { name = "numpy", specifier = ">=1.24,<3" },
+    { name = "scipy", specifier = ">=1.10,<2" },
+]
+
+[[package]]
+name = "openzilo-gesture-studio"
+version = "0.2.0"
+source = { editable = "studio" }
+dependencies = [
+    { name = "openzilo", extra = ["pcm"] },
+    { name = "openzilo-gesture" },
+    { name = "pyqtgraph" },
+    { name = "pyside6-essentials" },
+    { name = "sounddevice" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "openzilo", extras = ["pcm"], specifier = ">=0.6.3,<0.7" },
+    { name = "openzilo-gesture", editable = "." },
+    { name = "pyqtgraph", specifier = ">=0.13.7,<0.15" },
+    { name = "pyside6-essentials", specifier = ">=6.9,<6.12" },
+    { name = "sounddevice", specifier = ">=0.5,<0.6" },
 ]
 
 [[package]]
