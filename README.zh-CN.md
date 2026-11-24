@@ -7,6 +7,10 @@
 <p align="center">让 OpenZilo 戒指学会你的手势，并在自己的 Python 程序里识别它们。</p>
 
 <p align="center">
+  <a href="https://pypi.org/project/openzilo-gesture-studio/"><img src="https://img.shields.io/pypi/v/openzilo-gesture-studio" alt="OpenZilo Gesture Studio 的 PyPI 版本"></a>
+</p>
+
+<p align="center">
   <a href="README.md">English</a> · <a href="#快速开始">快速开始</a> ·
   <a href="#使用流程">使用流程</a> · <a href="#在-python-中使用">Python API</a> ·
   <a href="#文档">文档</a>

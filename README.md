@@ -7,6 +7,10 @@
 <p align="center">Teach an OpenZilo ring your own gestures, then recognize them in your Python app.</p>
 
 <p align="center">
+  <a href="https://pypi.org/project/openzilo-gesture-studio/"><img src="https://img.shields.io/pypi/v/openzilo-gesture-studio" alt="OpenZilo Gesture Studio on PyPI"></a>
+</p>
+
+<p align="center">
   <a href="README.zh-CN.md">中文</a> · <a href="#quick-start">Quick start</a> ·
   <a href="#workflow">Workflow</a> · <a href="#use-it-in-python">Python API</a> ·
   <a href="#documentation">Docs</a>
