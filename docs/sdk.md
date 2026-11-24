@@ -4,7 +4,7 @@
 
 ## Dependency / 依赖
 
-Studio installs the official SDK from PyPI with `openzilo[pcm]>=0.6.3,<0.7`. The SDK supplies Bleak, cryptography and PyAV. `openzilo-gesture` only needs NumPy, SciPy and hmmlearn.
+Studio installs the official SDK from PyPI with `openzilo[pcm]==0.6.3`. The SDK supplies Bleak, cryptography and PyAV. `openzilo-gesture` only needs NumPy, SciPy and hmmlearn.
 
 Studio 固定上述提交及 `pcm` extra，只适配新版 SDK。PyAV 用于进程内实时 PCM 解码；签名固件验证使用 SDK 的 cryptography 依赖。独立识别包仍不依赖这些组件。
 

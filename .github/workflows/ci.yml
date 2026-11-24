@@ -1,8 +1,6 @@
 name: Tests
 
 on:
-  pull_request:
-  workflow_call:
   push:
     tags:
       - '**'
